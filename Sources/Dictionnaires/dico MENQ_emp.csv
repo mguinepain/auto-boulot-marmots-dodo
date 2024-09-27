@@ -1,0 +1,23 @@
+Variable;Type;Position;Taille;Libelle;LibDet
+IDENT_MEN;c;;;uid_MEN;Identifiant ménage
+pond_menC;d;;;Coeff;Poids ménage
+JNBVEH;i;;;VehN;Nb voitures particulières, VUL et camping-cars à disposition du ménage
+JNBVHS;f;;;VehHS_si;Possession de véh. hors d'usage (détention carte grise) parmi ceux à disposition
+JNBVPHS;i;;;VehHS_nVoi;Nb voitures hors d'usage
+JNBCCHS;i;;;VehHS_nCpg;Nb camping-cars hors d'usage
+JNBVULHS;i;;;VehHS_nUti;Nb VUL hors d'usage
+JNBMOTO;i;;;DrmN_moto;Nb motos, scooters y.c. à trois roues (> 50 cm3) à disposition du ménage
+JNBCYCLO;i;;;DrmN_cyclo;Nb cyclomoteurs (<= 50 cm3) à disposition du ménage
+JNBAUTVEH;i;;;QuadN;Nb voiturettes et quads à disposition du ménage
+JNBVELOAD;i;;;VelN_adu;Nb vélos d'adulte (y.c. à assistance électrique) à disposition du ménage
+JNBVELOENF;i;;;VelN_enf;Nb vélos d'enfant à disposition du ménage
+JUTILMOTO;i;;;DrmN_moto_uti;Nb motos ou scooters +50 cm3 utilisés (parmi dispo) 12 dern. mois
+JUTILCYCLO;i;;;DrmN_cyclo_uti;Nb cyclomoteurs -50 cm3 utilisés (parmi dispo) 12 dern. mois
+JUTILAUTVEH;i;;;QuadN_uti;Nb voiturettes et quads utilisés (parmi dispo) 12 dern. mois
+JUTILVELOAD;i;;;VelN_adu_uti;Nb vélos d'adulte utilisés (parmi dispo) 12 dern. mois
+JUTILVELOENF;i;;;VelN_enf_uti;Nb vélos d'enfant utilisés (parmi dispo) 12 dern. mois
+JVOLVELO;f;;;VolVelo;Le ménage s'est fait voler un vélo au cours des 12 derniers mois
+JPLUSVELO;f;;;VolVelo_Renon;Un membre du ménage a renoncé à utiliser un vélo après le vol
+JNBKVM;i;;;VehN_mch;Nb voit. particulières, VUL et camping-cars du ménage en état de marche
+JUTIL2RM;i;;;DrmN_uti;Nb deux-roues motorisés utilisés 12 dern. mois
+BLOGDIST;c;;;DistsArrets;Distance du domicile : arrêt bus, tram, métro

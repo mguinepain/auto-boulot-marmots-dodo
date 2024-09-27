@@ -1,0 +1,190 @@
+Variable;Type;Libelle;LibDet;Modas
+IDENT_MEN;c;uid_MEN;Identifiant m?nage;
+IDENT_IND;c;uid_PER;Identifiant individu;
+NOIK;c;id_PER;Num?ro du Kish dans le m?nage;
+pond_indC;d;CoeffEnq;Poids individu Kish;
+TRAVAILLE;f;Activ_trav;A un emploi actuellement;O/N
+ETUDIE;f;Activ_etud;Etudes en cours;O/N
+BTRAVFIX;f;LieuTrav;Type de lieu de travail;Type de lieu de travail
+BTRAVTEL;f;Teletrav;Pratique du t?l?travail;Pratique t?l?travail
+BTRAVNBJ;i;Teletrav_jSem;Nb de jours/semaine d?placement lieu de travail;
+BTRAVEMPL;f;PEC_employeur;Participation de l'employeur frais de transports;O/N
+BTRAVELEC_FLAG;f;Prise_flag;Variable drapeau du SetOf BTRAVELEC;FLAG
+BTRAVELEC_A;f;Prise_std;Existence prise ?lectrique ordinaire pr?s du lieu de travail;1 : Oui / 0 : Non
+BTRAVELEC_B;f;Prise_spc;Existence prise sp?ciale de recharge ?lectrique pr?s du lieu de travail;1 : Oui / 0 : Non
+BPERMIS;f;Permis;Possession du permis voiture (permis B);O/N
+BCARTABON;f;AboTC;Possession de cartes d'abonnement, r?duction - d?placements TC;O/N/A
+BTYP1CART;f;AboTC1_type;Type de la carte de transport 1;Carte d?abonnement/r?duction
+BTYP1RES_FLAG;f;AboTC1_flag;Variable drapeau du SetOf BTYP1RES;FLAG
+BTYP1RES_A;f;AboTC1_urb;Carte 1 valide sur r?seau urbain, suburbain;1 : Oui / 0 : Non
+BTYP1RES_B;f;AboTC1_car;Carte 1 valide sur r?seau cars interurbains, ruraux;1 : Oui / 0 : Non
+BTYP1RES_C;f;AboTC1_trn;Carte 1 valide sur r?seau SNCF;1 : Oui / 0 : Non
+BTYP1RES_D;f;AboTC1_urb_trn;Carte 1 valide sur r?seau SNCF et r?seau urbain;1 : Oui / 0 : Non
+BTYP1RES_E;f;AboTC1_urb_car;Carte 1 valide sur r?seau urbain, cars interurbains;1 : Oui / 0 : Non
+BTYP1RES_F;f;AboTC1_air;Carte 1 valide sur r?seau a?rien;1 : Oui / 0 : Non
+BTYP1RES_G;f;AboTC1_bat;Carte 1 valide sur r?seau maritime;1 : Oui / 0 : Non
+BTYP2CART;f;AboTC2_type;Type de la carte de transport 2;Carte d?abonnement/r?duction
+BTYP2RES_FLAG;f;AboTC2_flag;Variable drapeau du SetOf BTYP2RES;FLAG
+BTYP2RES_A;f;AboTC2_urb;Carte 2 valide sur r?seau urbain, suburbain;1 : Oui / 0 : Non
+BTYP2RES_B;f;AboTC2_car;Carte 2 valide sur r?seau cars interurbains, ruraux;1 : Oui / 0 : Non
+BTYP2RES_C;f;AboTC2_trn;Carte 2 valide sur r?seau SNCF;1 : Oui / 0 : Non
+BTYP2RES_D;f;AboTC2_urb_trn;Carte 2 valide sur r?seau SNCF et r?seau urbain;1 : Oui / 0 : Non
+BTYP2RES_E;f;AboTC2_urb_car;Carte 2 valide sur r?seau urbain, cars interurbains;1 : Oui / 0 : Non
+BTYP2RES_F;f;AboTC2_air;Carte 2 valide sur r?seau a?rien;1 : Oui / 0 : Non
+BTYP2RES_G;f;AboTC2_bat;Carte 2 valide sur r?seau maritime;1 : Oui / 0 : Non
+BTYP3CART;f;AboTC3_type;Type de la carte de transport 3;Carte d?abonnement/r?duction
+BTYP3RES_FLAG;f;AboTC3_flag;Variable drapeau du SetOf BTYP3RES;FLAG
+BTYP3RES_A;f;AboTC3_urb;Carte 3 valide sur r?seau urbain, suburbain;1 : Oui / 0 : Non
+BTYP3RES_B;f;AboTC3_car;Carte 3 valide sur r?seau cars interurbains, ruraux;1 : Oui / 0 : Non
+BTYP3RES_C;f;AboTC3_trn;Carte 3 valide sur r?seau SNCF;1 : Oui / 0 : Non
+BTYP3RES_D;f;AboTC3_urb_trn;Carte 3 valide sur r?seau SNCF et r?seau urbain;1 : Oui / 0 : Non
+BTYP3RES_E;f;AboTC3_urb_car;Carte 3 valide sur r?seau urbain, cars interurbains;1 : Oui / 0 : Non
+BTYP3RES_F;f;AboTC3_air;Carte 3 valide sur r?seau a?rien;1 : Oui / 0 : Non
+BTYP3RES_G;f;AboTC3_bat;Carte 3 valide sur r?seau maritime;1 : Oui / 0 : Non
+BTYP4CART;f;AboTC4_type;Type de la carte de transport 4;Carte d?abonnement/r?duction
+BTYP4RES_FLAG;f;AboTC4_flag;Variable drapeau du SetOf BTYP4RES;FLAG
+BTYP4RES_A;f;AboTC4_urb;Carte 4 valide sur r?seau urbain, suburbain;1 : Oui / 0 : Non
+BTYP4RES_B;f;AboTC4_car;Carte 4 valide sur r?seau cars interurbains, ruraux;1 : Oui / 0 : Non
+BTYP4RES_C;f;AboTC4_trn;Carte 4 valide sur r?seau SNCF;1 : Oui / 0 : Non
+BTYP4RES_D;f;AboTC4_urb_trn;Carte 4 valide sur r?seau SNCF et r?seau urbain;1 : Oui / 0 : Non
+BTYP4RES_E;f;AboTC4_urb_car;Carte 4 valide sur r?seau urbain, cars interurbains;1 : Oui / 0 : Non
+BTYP4RES_F;f;AboTC4_air;Carte 4 valide sur r?seau a?rien;1 : Oui / 0 : Non
+BTYP4RES_G;f;AboTC4_bat;Carte 4 valide sur r?seau maritime;1 : Oui / 0 : Non
+BABONNVLS;f;AboVel;Possession d'un abonnement VLS ou location v?los de courte dur?e;O/N
+BNBVLS;i;AboVel_nJrs;Nb d'utilisation d'un VLS ou d'un v?lo location de courte dur?e sur les 7 derniers jours;
+BCARTPEAGE;f;AboAutor;Possession d'un abonnement pour autoroute ou p?age;O/N
+BCARTPTYPE_FLAG;f;AboAutor_flag;Variable drapeau du SetOf BCARTPTYPE;Flag
+BCARTPTYPE_A;f;AboAutor_nat;Abonnement national (toutes autoroutes France);1 : Oui / 0 : Non
+BCARTPTYPE_B;f;AboAutor_reg;Abonnement r?gional (certaines autoroutes France);1 : Oui / 0 : Non
+BCARTPTYPE_C;f;AboAutor_loc;Abonnement urbain, p?riurbain ou local (section pr?cise);1 : Oui / 0 : Non
+BCARTPTYPE_D;f;AboAutor_spc;Abonnement ouvrage particulier (tunnel, viaduc);1 : Oui / 0 : Non
+BCARTPTYPE_E;f;AboAutor_etg;Abonnement pays ?tranger;1 : Oui / 0 : Non
+BCARTPTYPE_F;f;AboAutor_zzz;Autre abonnement;1 : Oui / 0 : Non
+BABONNAUTOP;f;AboAutoPtg;Possession d'un abonnement pour un service d'autopartage;O/N
+BAUTOPTYP;f;AboAutoPtg_type;Type du service d'autopartage;Service d'autopartage
+BNBAUTOP;i;AboAutoPtg_nJrs;Nb d'utilisation du service d'autopartage au cours de la derni?re semaine;
+GAGENE;f;Gene;G?ne physique dans d?placements hors du domicile;G?ne physique
+GADIFFI_FLAG;f;Gene_flag;Variable drapeau du SetOf GADFIFI;Flag
+GADIFFI_A;f;Gene_san;G?ne : pb sant? longue dur?e;1 : Oui / 0 : Non
+GADIFFI_B;f;Gene_grs;G?ne : pb sant? temporaire, grossesse;1 : Oui / 0 : Non
+GADIFFI_C;f;Gene_lgg;G?ne : difficult?s en langue fran?aise;1 : Oui / 0 : Non
+GADIFFI_D;f;Gene_age;G?ne : ?ge;1 : Oui / 0 : Non
+GADIFFI_E;f;Gene_zzz;G?ne : autre raison;1 : Oui / 0 : Non
+GADIFFI_F;f;Gene_nr;Refus de r?ponse sur raison de g?ne dans d?placements;1 : Oui / 0 : Non
+GAGENE1CIRC;f;GeneQd_mch;Circonstance g?ne : marcher qqs centaines de m?tres;O/N/A
+GAGENE2CIRC;f;GeneQd_esc;Circonstance g?ne : monter ou descendre des marches;O/N/A
+GAGENE3CIRC;f;GeneQd_fau;Circonstance g?ne : acc?der ? certains lieux en fauteuil roulant;O/N/A
+GAGENE4CIRC;f;GeneQd_deb;Circonstance g?ne : tenir debout sans appui;O/N/A
+GAGENE5CIRC;f;GeneQd_por;Circonstance g?ne : ouvrir portes d'entr?e, de sortie;O/N/A
+GAGENE6CIRC;f;GeneQd_bou;Circonstance g?ne : appuyer sur des boutons d'appel;O/N/A
+GAGENE7CIRC;f;GeneQd_vel;Circonstance g?ne : rouler ? v?lo ou en moto;O/N/A
+GAGENE8CIRC;f;GeneQd_veh;Circonstance g?ne : monter et descendre d'une voiture;O/N/A
+GAGENE9CIRC;f;GeneQd_ass;Circonstance g?ne : rester assis pendant long trajet;O/N/A
+GAGENE10CIRC;f;GeneQd_cdt;Circonstance g?ne : conduire et garder la ma?trise du v?hicule;O/N/A
+GAGENE11CIRC;f;GeneQd_stn;Circonstance g?ne : acc?der ? station, quai;O/N/A
+GAGENE12CIRC;f;GeneQd_dmd;Circonstance g?ne : demander renseignement sur itin?raire;O/N/A
+GAGENE13CIRC;f;GeneQd_ach;Circonstance g?ne : utiliser billetterie automatique;O/N/A
+GAGENE14CIRC;f;GeneQd_pln;Circonstance g?ne : lire un plan, un horaire;O/N/A
+GAGENE15CIRC;f;GeneQd_cps;Circonstance g?ne : composter billet;O/N/A
+GAGENE16CIRC;f;GeneQd_dir;Circonstance g?ne : se diriger dans gare, station;O/N/A
+IMMODEP_FLAG;f;Immobilite_flag;Variable drapeau du SetOf IMMODEP;Flag
+IMMODEP_A;f;Immobilite_j1;Immobilit? jour J-1 avant l'enqu?te;1 : Oui / 0 : Non
+IMMODEP_B;f;Immobilite_j2;Immobilit? jour J-2 avant l'enqu?te;1 : Oui / 0 : Non
+IMMODEP_C;f;Immobilite_j3;Immobilit? jour J-3 avant l'enqu?te;1 : Oui / 0 : Non
+IMMODEP_D;f;Immobilite_j4;Immobilit? jour J-4 avant l'enqu?te;1 : Oui / 0 : Non
+IMMODEP_E;f;Immobilite_j5;Immobilit? jour J-5 avant l'enqu?te;1 : Oui / 0 : Non
+IMMODEP_F;f;Immobilite_j6;Immobilit? jour J-6 avant l'enqu?te;1 : Oui / 0 : Non
+IMMODEP_G;f;Immobilite_j7;Immobilit? jour J-7 avant l'enqu?te;1 : Oui / 0 : Non
+MIMMOSAM;f;Immobilite_j_sam;Immobilit? samedi;O/N
+MIMMODIM;f;Immobilite_j_dim;Immobilit? dimanche;O/N
+MIMMOSEM;f;Immobilite_sem;Immobilit? depuis 1 semaine;O/N
+MDATE_jour;f;EnqDate_JS;Jour de la semaine du jour tir? (de mobilit? locale);
+MDATE_mois;f;EnqDate_M;Mois du jour tir? (de mobilit? locale);
+MDATE_delai;i;Delai;D?lai (en jours) entre la date d'enqu?te et le jour tir? (de mobilit? locale);
+MRAISIMMOJOUV;f;Immobilite_sem_Pq;Raison immobilit? depuis une semaine;Raison immobilit? depuis une semaine
+MRAISIMMOSAM_FLAG;f;Immobilite_j_sam_Pq;Variable drapeau du SetOf MRAISIMMOSAM;FLAG
+MRAISIMMOSAM_A;f;Immobilite_j_sam_Pq_bes;Raison immobilit? samedi : pas besoin;1 : Oui / 0 : Non
+MRAISIMMOSAM_B;f;Immobilite_j_sam_Pq_enf;Raison immobilit? samedi : trop jeune pour se d?placer seul;1 : Oui / 0 : Non
+MRAISIMMOSAM_C;f;Immobilite_j_sam_Pq_tmp;Raison immobilit? samedi : incapacit? provisoire;1 : Oui / 0 : Non
+MRAISIMMOSAM_D;f;Immobilite_j_sam_Pq_pmt;Raison immobilit? samedi : incapacit? permanente;1 : Oui / 0 : Non
+MRAISIMMOSAM_E;f;Immobilite_j_sam_Pq_res;Raison immobilit? samedi : n?cessit? rester sur place;1 : Oui / 0 : Non
+MRAISIMMOSAM_F;f;Immobilite_j_sam_Pq_veh;Raison immobilit? samedi : pas de v?hicule;1 : Oui / 0 : Non
+MRAISIMMOSAM_G;f;Immobilite_j_sam_Pq_pan;Raison immobilit? samedi : v?hicule en panne;1 : Oui / 0 : Non
+MRAISIMMOSAM_H;f;Immobilite_j_sam_Pq_cdt;Raison immobilit? samedi : aucune personne pour conduire;1 : Oui / 0 : Non
+MRAISIMMOSAM_I;f;Immobilite_j_sam_Pq_met;Raison immobilit? samedi : mauvaises conditions m?t?o;1 : Oui / 0 : Non
+MRAISIMMOSAM_J;f;Immobilite_j_sam_Pq_zzz;Raison immobilit? samedi : autre raison;1 : Oui / 0 : Non
+MRAISIMMODIM_FLAG;f;Immobilite_j_dim_Pq;Variable drapeau du SetOf MRAISIMMODIM;FLAG
+MRAISIMMODIM_A;f;Immobilite_j_dim_Pq_bes;Raison immobilit? dimanche : pas besoin;1 : Oui / 0 : Non
+MRAISIMMODIM_B;f;Immobilite_j_dim_Pq_enf;Raison immobilit? dimanche : trop jeune pour se d?placer seul;1 : Oui / 0 : Non
+MRAISIMMODIM_C;f;Immobilite_j_dim_Pq_tmp;Raison immobilit? dimanche : incapacit? provisoire;1 : Oui / 0 : Non
+MRAISIMMODIM_D;f;Immobilite_j_dim_Pq_pmt;Raison immobilit? dimanche : incapacit? permanente;1 : Oui / 0 : Non
+MRAISIMMODIM_E;f;Immobilite_j_dim_Pq_res;Raison immobilit? dimanche : n?cessit? rester sur place;1 : Oui / 0 : Non
+MRAISIMMODIM_F;f;Immobilite_j_dim_Pq_veh;Raison immobilit? dimanche : pas de v?hicule;1 : Oui / 0 : Non
+MRAISIMMODIM_G;f;Immobilite_j_dim_Pq_pan;Raison immobilit? dimanche : v?hicule en panne;1 : Oui / 0 : Non
+MRAISIMMODIM_H;f;Immobilite_j_dim_Pq_cdt;Raison immobilit? dimanche : aucune personne pour conduire;1 : Oui / 0 : Non
+MRAISIMMODIM_I;f;Immobilite_j_dim_Pq_met;Raison immobilit? dimanche : mauvaises conditions m?t?o;1 : Oui / 0 : Non
+MRAISIMMODIM_J;f;Immobilite_j_dim_Pq_zzz;Raison immobilit? dimanche : autre raison;1 : Oui / 0 : Non
+BTCSATISF;f;OpiTC;Opinion sur offre de transports collectifs proche du domicile;Opinion sur offre de TC
+BTCRAISINSATISF_FLAG;f;OpiTC_flag;Variable drapeau du SetOf BTCRAISINSATISF;FLAG
+BTCRAISINSATISF_A;f;OpiTC_dis;Raison insatisfaction TC : arrets trop ?loign?s du domicile;1 : Oui / 0 : Non
+BTCRAISINSATISF_B;f;OpiTC_hor;Raison insatisfaction TC : horaires/frequence pas adapt?s;1 : Oui / 0 : Non
+BTCRAISINSATISF_C;f;OpiTC_pct;Raison insatisfaction TC : pas ponctuels;1 : Oui / 0 : Non
+BTCRAISINSATISF_D;f;OpiTC_tar;Raison insatisfaction TC : tarifs trop ?lev?s;1 : Oui / 0 : Non
+BTCRAISINSATISF_E;f;OpiTC_acc;Raison insatisfaction TC : pas accessibles;1 : Oui / 0 : Non
+BTCRAISINSATISF_F;f;OpiTC_cft;Raison insatisfaction TC : conditions transport pas confortables;1 : Oui / 0 : Non
+BTCRAISINSATISF_G;f;OpiTC_sec;Raison insatisfaction TC : sentiment d'ins?curit?;1 : Oui / 0 : Non
+BTCRAISINSATISF_H;f;OpiTC_zzz;Raison insatisfaction TC : autre raison;1 : Oui / 0 : Non
+BCOVLDF;f;CovoitFinLG_3m;Covoiturage conducteur LD avec contrep. financi?re 3 dern. mois;O/N
+BCV1MOT_FLAG;f;CovoitFinLG_3m_motif;Variable drapeau du SetOf BCV1MOT;FLAG
+BCV1MOT_A;f;CovoitFinLG_3m_motif_tvl;Motif covoit. cond. LD avec contrep. fin. : travail ou ?tudes;1 : Oui / 0 : Non
+BCV1MOT_B;f;CovoitFinLG_3m_motif_lsr;Motif covoit. cond. LD avec contrep. fin. : loisirs;1 : Oui / 0 : Non
+BCV1MOT_C;f;CovoitFinLG_3m_motif_zzz;Motif covoit. cond. LD avec contrep. fin. : autre;1 : Oui / 0 : Non
+BCV1REL_FLAG;f;CovoitFinLG_3m_rel;Variable drapeau du SetOf BCV1REL;FLAG
+BCV1REL_A;f;CovoitFinLG_3m_rel_int;Mise en relation avec covoitur?s- trajets cond. avec contrep. fin. (3 mois) : site internet ou application smartphone;1 : Oui / 0 : Non
+BCV1REL_B;f;CovoitFinLG_3m_rel_tvl;Mise en relation avec covoitur?s- trajets cond. avec contrep. fin. (3 mois) : travail (coll?gues);1 : Oui / 0 : Non
+BCV1REL_C;f;CovoitFinLG_3m_rel_res;Mise en relation avec covoitur?s- trajets cond. avec contrep. fin. (3 mois) : relation personnelle;1 : Oui / 0 : Non
+BCV1REL_D;f;CovoitFinLG_3m_rel_ast;Mise en relation avec covoitur?s- trajets cond. avec contrep. fin. (3 mois) : autostop;1 : Oui / 0 : Non
+BCV1NB;f;CovoitFinLG_3m_N;Nb de covoit. cond. LD avec contrep. fin. au cours des 3 dern. mois;
+BCOVLDNF;f;CovoitGraLG_3m;Covoiturage conducteur LD sans contrep. financi?re 3 dern. mois;O/N
+BCV2MOT_FLAG;f;CovoitGraLG_3m_motif;Variable drapeau du SetOf BCV2MOT;FLAG
+BCV2MOT_A;f;CovoitGraLG_3m_motif_Tvl;Motif covoit. cond. LD sans contrep. fin. : travail ou ?tudes;1 : Oui / 0 : Non
+BCV2MOT_B;f;CovoitGraLG_3m_motif_Lsr;Motif covoit. cond. LD sans contrep. fin. : loisirs;1 : Oui / 0 : Non
+BCV2MOT_C;f;CovoitGraLG_3m_motif_zzz;Motif covoit. cond. LD sans contrep. fin. : autre;1 : Oui / 0 : Non
+BCV2REL_FLAG;f;CovoitGraLG_3m_rel;Variable drapeau du SetOf BCV2REL;FLAG
+BCV2REL_A;f;CovoitGraLG_3m_rel_int;Mise en relation avec covoitur?s- trajets cond. sans contrep. fin. (3 mois) : site internet ou application smartphone;1 : Oui / 0 : Non
+BCV2REL_B;f;CovoitGraLG_3m_rel_tvl;Mise en relation avec covoitur?s- trajets cond. sans contrep. fin. (3 mois) : travail (coll?gues);1 : Oui / 0 : Non
+BCV2REL_C;f;CovoitGraLG_3m_rel_res;Mise en relation avec covoitur?s- trajets cond. sans contrep. fin. (3 mois) : relation personnelle;1 : Oui / 0 : Non
+BCV2REL_D;f;CovoitGraLG_3m_rel_ast;Mise en relation avec covoitur?s- trajets cond. sans contrep. fin. (3 mois) : autostop;1 : Oui / 0 : Non
+BCV2NB;f;CovoitGraLG_3m_N;Nb de covoit. cond. LD sans contrep. fin. au cours des 3 dern. mois;
+BCVTV;f;Covoit_ms;Covoiturage passager pour travail ou ?tudes 4 dern. semaines;O/N
+BCVTVFQ;f;Covoit_ms_freq;Fr?quence de covoit. passager pour travail ou ?tudes (4 dern. sem);Fr?quence covoiturage r?gulier passager
+BCVTVREL_FLAG;f;Covoit_ms_rel;Variable drapeau du SetOf BCVTVREL;FLAG
+BCVTVREL_A;f;Covoit_ms_rel_int;Mise en relation avec conduct. pour covoit. passager travail ou ?tudes (4 dern. sem.) : site internet ou application smartphone;1 : Oui / 0 : Non
+BCVTVREL_B;f;Covoit_ms_rel_tvl;Mise en relation avec conduct. pour covoit. passager travail ou ?tudes (4 dern. sem.) : travail (coll?gues);1 : Oui / 0 : Non
+BCVTVREL_C;f;Covoit_ms_rel_res;Mise en relation avec conduct. pour covoit. passager travail ou ?tudes (4 dern. sem.) : relation personnelle;1 : Oui / 0 : Non
+BCVTVREL_D;f;Covoit_ms_rel_ast;Mise en relation avec conduct. pour covoit. passager travail ou ?tudes (4 dern. sem.) : autostop;1 : Oui / 0 : Non
+BCVTVFIN;f;Covoit_ms_contrepartie;Contrepartie financi?re covoiturage passager pour travail ou ?tudes;Contrepartie financi?re covoiturage
+FCMMODIF_A;f;ProjetsAnnules;Annulation de projets de voyage LD au cours des 12 dern. mois;1 : Oui / 0 : Non
+FCMMODIF_B;f;ProjetsModifies;Modification de projets de voyage LD au cours des 12 dern. mois;1 : Oui / 0 : Non
+FCMANURAIS_A;f;ProjetsAnnules_Pq_Off;Raison annulat. projet de voy. (12 dern. mois) : suppression ou modificat. offre de transp.;1 : Oui / 0 : Non
+FCMANURAIS_B;f;ProjetsAnnules_Pq_Sec;Raison annulat. projet de voy. (12 dern. mois) : pbs de s?curit?;1 : Oui / 0 : Non
+FCMANURAIS_C;f;ProjetsAnnules_Pq_Fin;Raison annulat. projet de voy. (12 dern. mois) : situat. financi?re;1 : Oui / 0 : Non
+FCMANURAIS_D;f;ProjetsAnnules_Pq_Pbs;Raison annulat. projet de voy. (12 dern. mois) : pbs personnels;1 : Oui / 0 : Non
+FCMANURAIS_E;f;ProjetsAnnules_Pq_Zzz;Raison annulat. projet de voy. (12 dern. mois) : autre raison;1 : Oui / 0 : Non
+FCMANUOU_A;f;ProjetsAnnules_FrHexa;Annulation de voy. pr?vus en France m?tropolitaine (12 dern. mois);1 : Oui / 0 : Non
+FCMANUOU_B;f;ProjetsAnnules_FrOutr;Annulation de voy. pr?vus en France outre-mer (12 dern. mois);1 : Oui / 0 : Non
+FCMANUOU_C;f;ProjetsAnnules_Etg;Annulation de voy. pr?vus ? l'?tranger (12 dern. mois);1 : Oui / 0 : Non
+FCMMODRAIS_A;f;ProjetsModifies_Pq_Off;Raison modificat. projet de voy. (12 dern. mois) : suppression ou modificat. offre de transp.;1 : Oui / 0 : Non
+FCMMODRAIS_B;f;ProjetsModifies_Pq_Sec;Raison modificat. projet de voy. (12 dern. mois) : pbs de s?curit?;1 : Oui / 0 : Non
+FCMMODRAIS_C;f;ProjetsModifies_Pq_Fin;Raison modificat. projet de voy. (12 dern. mois) : situat. financi?re;1 : Oui / 0 : Non
+FCMMODRAIS_D;f;ProjetsModifies_Pq_Pbs;Raison modificat. projet de voy. (12 dern. mois) : pbs personnels;1 : Oui / 0 : Non
+FCMMODRAIS_E;f;ProjetsModifies_Pq_Zzz;Raison modificat. projet de voy. (12 dern. mois) : autre raison;1 : Oui / 0 : Non
+FCMMODQUOI_A;f;ProjetsModifies_Ct_Rep;Modification projet de voy. : en le reportant;1 : Oui / 0 : Non
+FCMMODQUOI_B;f;ProjetsModifies_Ct_Iti;Modification de projet de voy. : en changeant d'itin?raire;1 : Oui / 0 : Non
+FCMMODQUOI_C;f;ProjetsModifies_Ct_Mod;Modification de projet de voy. : en changeant de moyen de transport;1 : Oui / 0 : Non
+FCMMODMOYINI;f;ProjetsModifies_MdInit;Moyen de transport initialement envisag? pour dernier voyage modifi?;moyen de transport
+FCMMODMOYFIN;f;ProjetsModifies_MdRete;Moyen de transport finalement retenu pour dernier voyage modifi?;moyen de transport
+dist_ign_trav;d;Travail_Dis;Distance routi?re domicile ? travail (si au moins un d?placement recens? vers lieu de travail);
+dist_vo_trav;d;Travail_DisVO;Distance VO domicile ? travail (si au moins un d?placement recens? vers lieu de travail);
+dist_ign_etude;d;Etudes_Dis;Distance routi?re domicile ? ?tude (si au moins un d?placement recens? vers lieu d'?tude);
+dist_vo_etude;d;Etudes_DisVO;Distance VO domicile ? ?tude (si au moins un d?placement recens? vers lieu d'?tude);

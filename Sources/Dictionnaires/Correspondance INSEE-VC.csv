@@ -1,0 +1,74 @@
+CODE_INSEE_VC;NOM_VC;uid_ENQ;ENQUETE;ENQUETE_MIN
+01053;Bourg-en-Bresse;BEB;;
+04112;Marseille;MAR;;
+05061;Gap;GAP;;
+06088;Nice;NIC;NICE;Nice
+11069;Carcassonne;CAR;CARCASSONNE;Carcassonne
+13055;Marseille;MAR;MARSEILLE;Marseille
+14118;Calvados;CAL;CAEN;Caen
+16015;Angoulême;AGL;ANGOULEME;Angoulême
+17299;Rochefort;ROC;;
+17300;La Rochelle;LAR;LA ROCHELLE;La Rochelle
+17306;Royans;ROY;;
+17415;Saintes;SAI;;
+20004;Ajaccio;AJA;;
+21231;Dijon;DIJ;DIJON;Dijon
+22050;Dinan;DIN;;
+22278;Saint Brieuc;STB;SAINT BRIEUC;Saint-Brieuc
+25056;Besançon;BES;BESANCON;Besançon
+26362;Valence;VLC;VALENCE;Valence
+27229;Evreux;EVR;;
+29019;Brest;BRE;BREST;Brest
+29232;Quimper;QMP;QUIMPER;Quimper
+30189;Nîmes;NIM;NIMES;Nîmes
+31555;Toulouse;TLS;TOULOUSE;Toulouse
+33063;Bordeaux;BOR;BORDEAUX;Bordeaux
+34032;Béziers;BEZ;BEZIERS;Béziers
+34172;Montpellier;MON;MONTPELLIER;Montpellier
+35238;Rennes;REN;RENNES;Rennes
+37261;Tours;TOU;TOURS;Tours
+38185;Grenoble;GRE;GRENOBLE;Grenoble
+42187;Roanne;ROA;;
+42218;Saint Etienne;STE;SAINT ETIENNE;Saint-Étienne
+44109;Loire-Atlantique;LOI;NANTES;Nantes
+49007;Angers;AGR;ANGERS;Angers
+50129;Cherbourg;CHE;CHERBOURG;Cherbourg
+53130;Laval;LAV;;
+54323;Longwy;LON;LONGWY;Longwy
+54395;Nancy;NAN;NANCY;Nancy
+57106;Bouzonville;BOU;;
+57463;Metz;MET;METZ;Metz
+57672;Thionville;THI;THIONVILLE;Thionville
+59178;Douai;DOU;DOUAI;Douai
+59183;Dunkerque;DUN;DUNKERQUE;Dunkerque
+59350;Lille;LIL;LILLE;Lille
+59606;Valenciennes;VLN;VALENCIENNES;Valenciennes
+60057;Beauvais;BEA;;
+60175;Creil;CRE;CREIL;Creil
+61001;Alençon;ALE;ALENCON;Alençon
+62041;Arras;ARR;;
+63113;Clermont-Ferrand;CLF;CLERMONT FERRAND;Clermont-Ferrand
+64102;Bayonne;BAY;BAYONNE;Bayonne
+67482;Bas-Rhin;BRH;STRASBOURG;Strasbourg
+68297;Saint Louis;STL;;
+69123;Lyon;LYO;LYON;Lyon
+71076;Châlon sur Saone;CHS;;
+71153;Le Creusot;LCS;;
+74010;Annecy;ANC;ANNECY;Annecy
+74012;Annemasse;ANM;ANNEMASSE;Annemasse
+75056;Paris;IDF;IDF;Paris
+76351;Le Havre;HAV;LE HAVRE;Le Havre
+76540;Rouen;ROU;ROUEN;Rouen
+78423;Saint Quentin en Yvelines;SQY;;
+79191;Niort;NIO;NIORT;Niort
+80021;Amiens;AMI;AMIENS;Amiens
+81004;Albi;ALB;ALBI;Albi
+83061;Var;VAR;;
+83081;Nice;NIC;;
+85191;La Roche sur Yon;RSY;;
+85194;Les Sables d'Olonne;SDO;;
+86194;Poitiers;POI;POITIERS;Poitiers
+89419;Puisaye Forterre;PFO;;
+97209;Martinique;MTQ;MARTINIQUE;Fort-de-France
+97302;Cayenne;CAY;;
+97400;La Réunion;REU;LA REUNION;Saint-Denis

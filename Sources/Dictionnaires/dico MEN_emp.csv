@@ -1,0 +1,85 @@
+Variable;Type;Position;Taille;Libelle;ConformeCerema;LibDet
+ident_men;c;;;uid_MEN;oui;IDENTIFIANT DU MENAGE
+ident_log;c;;;uid_LOG;;Identifiant du logement
+vague_enq;i;;;enqEMP_vague;oui;Num?ro de vague
+BS;c;;;enqEMP_log;;Num?ro de m?nage dans le logement
+pond_menC;d;;;Coeff;oui;Poids m?nage
+NPERS;i;;;nPer;;Nombre de personnes du m?nage
+NCOUPLES;i;;;nCpl;;Nombre de couples dans le m?nage
+NENFANTS;i;;;nEnf;;Nombre d'enfants dans le m?nage
+NACTIFS;i;;;nActifs;;Nombre d'actifs dans le m?nage
+NENFACT;i;;;nEnfActifs;;Nombre d'enfants actifs dans le m?nage
+TYPMEN5;f;;;TypoMen_EMP;;Type de m?nage au sens du TCM
+TYPMEN15;f;;;TypoMen15_EMP;;Type de m?nage d?taill? au sens du TCM
+PRPERM;f;;;RefPermanence;;Permanence de la personne de r?f?rence
+PRAN;f;;;Breadwinner;;Principal apporteur de ressources sur l'ann?e (dans/hors m?nage)
+NPGREF;i;;;nPerRef;;Nombre de personnes du groupe de r?f?rence
+PREF;i;;;PerRef;;Num?ro d'ordre de la personne de r?f?rence (PR)
+SEXEPR;f;;;PerRef_Genre;;Sexe de la PR
+AGEPR;i;;;PerRef_Age;;Age de la PR au moment de l'enqu?te
+AGPR;i;;;PerRef_Age31Dec;;Age de la PR au 31 d?cembre de l'ann?e de l'enqu?te
+NAIS7PR;c;;;PerRef_LieuNsc;;Lieu de naissance de la PR (code regroup?)
+COUPLEPR;f;;;PerRef_Cpl;;Vie en couple de la PR
+SITUAPR;f;;;PerRef_Activ;;Situation de la PR vis-à-vis du travail
+CS42PR;f;;;PerRef_PCS42;;Cat?gorie socioprofessionnelle d?taill?e de la PR
+CS24PR;f;;;PerRef_PCS24;;Cat?gorie socioprofessionnelle regroup?e de la PR
+CODCSPR;f;;;PerRef_PCS8;;Cat?gorie socio-professionnelle (CS) de la PR en activit?
+NATIO7PR;f;;;PerRef_Nat;;Nationalit? de la PR (code regroup?)
+DIPDETPR;f;;;PerRef_NivEtu;;Dipl?me le plus ?lev? de la PR (code regroup?)
+CSCJDCD;f;;;PerCj_Mort_PCS8;;Cat?gorie socioprofessionnelle du conjoint d?c?d? de la PR
+PCONJ;i;;;PerCj;;Num?ro d'ordre du conjoint de la personne de r?f?rence (PR)
+SEXECJ;f;;;PerCj_Genre;;Sexe du conjoint de la PR
+AGECJ;i;;;PerCj_Age;;Age du conjoint de la PR au moment de l'enqu?te
+AGCJ;i;;;PerCj_Age31Dec;;Age du conjoint de la PR au 31 d?cembre de l'ann?e de l'enqu?te
+NAIS7CJ;c;;;PerCj_LieuNsc;;Lieu de naissance du conjoint de la PR (code regroup?)
+SITUACJ;f;;;PerCj_Activ;;Situation du conjoint de la PR vis-?-vis du travail
+CS42CJ;f;;;PerCj_PCS42;;Cat?gorie socioprofessionnelle d?taill?e du conjoint de la PR
+CS24CJ;f;;;PerCj_PCS24;;Cat?gorie socioprofessionnelle regroup?e du conjoint de la PR
+CODCSCJ;f;;;PerCj_PCS8;;Cat?gorie socio-professionnelle (CS) du conjoint de la PR en activit?
+NATIO7CJ;f;;;PerCj_Nat;;Nationalit? du conjoint de la PR (code regroup?)
+DIPDETCJ;f;;;PerCj_NivEtu;;Dipl?me le plus ?lev? du conjoint de la PR (code regroup?)
+TYPLOGIND;f;;;LogType;oui;Type de logement ind?pendant
+CATLOGA;f;;;LogType_Rec;;Cat?gorie du logement au sens du recensement
+CATLOGB;f;;;LogType_TCM;;Cat?gorie du logement au sens du TCM
+NBANNLOG;f;;;LogDureeOccu;;Nombre d'ann?es dans le logement pour le m?nage
+STOC;f;;;LogOcc;oui;Statut d'occupation
+STOCP;f;;;LogOcc_Propri;;Statut d'occupation (propri?taire)
+CATLOGAC;f;;;LogType_RecDecl;;Cat?gorie du logement au sens du recensement d?clar?e par le m?nage
+EMMENAG;i;;;LogAnnee;;Ann?e d'emm?nagement
+PROPRI;f;;;LogPropri;;Propri?taire du logement
+NRH;i;;;Log_nRes;;Nombre de r?sidences habituelles du m?nage
+NRHC;i;;;Log_nResCom;;Nombre de r?sidences habituelles communes du m?nage
+NCONTAML;i;;;Log_nCtct;;Nombre de contacts possibles du m?nage dans les logements
+ENFHORS;f;;;siEnf_horsDom;;Existence d'enfants hors domicile
+NENFHORS;i;;;nEnf_horsDom;;Nombre d'enfants hors domicile
+HANDIC1E;f;;;siHandi;;Existence de personnes handicap?es ou g?n?es dans le m?nage
+NHANDIC;i;;;nHandi_h;;Nombre de personnes handicap?es dans le m?nage
+NGENE;i;;;nHandi_g;;Nombre de personnes g?n?es dans le m?nage
+ACHARGE;f;;;siCharge;;Existence de personnes ? charge
+quartile_rev;n;;;rev_Q;;Quartile de revenu consolid?
+decile_rev;n;;;rev_D;;D?cile de revenu consolid?
+COEFFUC;n;;;nUC;;Somme des unit?s de consommation
+quartile_rev_uc;n;;;rev_Q_UC;;Quartile de revenu par UC consolid?
+decile_rev_uc;n;;;rev_D_UC;oui;D?cile de revenu par UC consolid?
+CSMEN;f;;;PCS_Ref;;Cat?gorie socioprofessionnelle du m?nage
+DEP_RES;c;;;Dep;oui;D?partement de r?sidence
+NUTS_res;c;;;Nuts;;Code NUTS de la commune de r?sidence
+REG_res;c;;;Reg;;R?gion de la commune de r?sidence
+oldREG_res;c;;;RegEx;;Ancienne r?gion de la commune de r?sidence
+lqpv;f;;;LogQPV;;Le m?nage est dans un QPV
+TUU2017_RES;f;;;UnUrRang;;Tranche d'unit? urbaine 2020 (calcul?e sur la population 2017) de la commune de r?sidence
+STATUTCOM_UU_RES;f;;;UnUrPosi;oui;Statut dans l'unit? urbaine (calcul? sur la population 2017) de la commune de r?sidence
+TYPE_UU_RES;f;;;UnUrType;oui;Type de l'unit? urbaine de la commune de r?sidence
+TAA2017_RES;f;;;ZoneRang;;Tranche d'aire d'attraction des villes 2020 (calcul?e sur la population 2017) de la commune de r?sidence
+CATCOM_AA_RES;f;;;ZonePosi;;Cat?gorie de la commune de r?sidence dans l'aire d'attraction des villes 2020
+DENSITECOM_RES;f;;;ZoneDens;oui;Degr? de densit? de la commune de r?sidence
+pop_10min_pieton_tram_metro_res;n;;;pPop_10mn_Tcu;;Part de la population de la commune du domicile ? moins de 10 min ? pied d'une station de m?tro ou de tram
+pop_10min_pieton_train_res;n;;;pPop_10mn_Trn;;Part de la population de la commune du domicile ? moins de 10 min ? pied d'une station de train (TER, RER et grande ligne)
+pop_10min_voiture_tram_metro_res;n;;;pPop_10mnV_Tcu;;Part de la population de la commune du domicile ? moins de 10 min en voiture d'une station de m?tro ou de tram
+pop_10min_voiture_train_res;n;;;pPop_10mnV_Trn;;Part de la population de la commune du domicile ? moins de 10 min en voiture d'une station de train (TER, RER et grande ligne)
+dist_res_metro;n;;;Dis_Metro;;Distance ? vol d'oiseau du domicile ? la station la plus proche de m?tro
+dist_res_tram;n;;;Dis_Tram;;Distance ? vol d'oiseau du domicile ? la station la plus proche de tramway
+dist_res_train;n;;;Dis_Gare;;Distance ? vol d'oiseau du domicile ? la gare la plus proche
+dist_res_tgv;n;;;Dis_GareTGV;;Distance ? vol d'oiseau du domicile ? la gare TGV la plus proche
+classement_littoral_res;f;;;ComLitt;;Statut de la commune  du domicile par rapport ? la loi littoral
+classement_montagne_res;f;;;ComMont;;Statut de la commune  du domicile par rapport ? la loi montagne

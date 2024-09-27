@@ -1,0 +1,101 @@
+Variable;Libelle;Type;Format;LibelleDet;RefModa
+IDENT_DEP;uid_DEP;c;$16.;Identifiant déplacement;
+IDENT_MEN;uid_MEN;c;$13.;Identifiant ménage;
+IDENT_IND;uid_PER;c;$15.;Identifiant individu;
+num_dep;id_DEP;i;BEST12.;Numéro du déplacement;
+nb_dep;sm_DEP;i;BEST12.;Nombre de déplacements dans la journée;
+POND_JOUR;CoeffJr;d;;Poids du jour;
+mobloc;depLocal;f;BEST12.;Deplct < 80km(vo) du domicile;
+MDATE_jour;EnqDate_JS;f;;Jour de la semaine du déplacement;
+MDATE_mois;EnqDate_M;f;;Mois du déplacement;
+MDATE_delai;EnqDate_delta;i;;Délai (en jours) entre la date d'enquête et le jour du déplacement;
+TYPEJOUR;JoSem;f;BEST12.;Type du jour de déplacement;jour
+VAC_SCOL;Vacances;f;;Période scolaire du dplct;1 : Oui / 0 : Non
+MORIDOM;Pr_Dom;f;$1.;Départ du domicile pour le PREMIER déplacement de la journée;O/N
+MORI1MOTIF;Pr_Mot;f;$4.;Motif à l'origine du 1er déplacement;motif
+MORIHDEP;O_Hr;c;TIME8.;Heure de depart du dplct;
+MMOTIFDES;D_Motif;f;$4.;Motif de déplacement;motif
+MOTPREC;O_Motif;f;$4.;Motif à l'origine du déplacement;
+MMOTIFPROFRAB;D_Entreprise;f;$1.;L'établissement où l'enquêté s'est rendu appartient à l'entreprise qui l'emploie;O/N
+MMOTIFDACC;D_MotAc;f;$4.;Motif de déplacement du passager;motif
+NUTS_ORI;O_NUTS;c;$4.;Code NUTS de départ du déplacement;
+REG_ORI;O_Reg;c;$29.;Région de départ du déplacement;
+oldREG_ORI;O_RegAnc;c;$29.;Ancienne région de départ du déplacement;
+PAYS_ORI;O_Pays;f;$255.;Pays de départ du dplct;
+MEMDESCOM;D_MemeCom;f;$1.;Point d'arrivée du déplacement dans la même commune que point de départ;1 : Oui / 0 : Non
+NUTS_DES;D_NUTS;c;$4.;Code NUTS d'arrivée du déplacement;
+REG_DES;D_Reg;c;$29.;Région d'arrivée du déplacement;
+oldREG_DES;D_RegAnc;c;$29.;Ancienne région arrivée du déplacement;
+PAYS_DES;D_Pays;f;$255.;Pays de destination;
+MDESHARR;D_Hr;c;TIME8.;Heure d'arrivée à destination;
+DUREE;Duree;d;BEST12.;Durée du dplct;
+DURACT;Duree_Act;d;BEST12.;Durée de l'activite suiv. le dplct;
+MMOY1S;Mode_1;f;$4.;1er moyen de transport utilisé;moyen de transport
+MMOY2S;Mode_2;f;$4.;2ème moyen de transport;moyen de transport
+MMOY3S;Mode_3;f;$4.;3ème moyen de transport;moyen de transport
+MMOY4S;Mode_4;f;$4.;4ème moyen de transport;moyen de transport
+MOYS;Mode_Concat;c;$15.;Tous moyens utilises;
+mtp;ModeP;f;$4.;Mode de transp. princ. du dplct;moyen de transport
+MNBMOD;Mode_nModes;i;BEST12.;Nombre de modes de transport utilisés;
+MNBMODCOND;Mode_nModesCond;i;BEST12.;Nombre de modes 'conducteur' utilisés;
+MDISTTOT_decl;Dis_Decl;d;BEST12.;Distance parcourue déclarée au cours du déplacement;
+dVO_ORIDES;DisV;d;BEST12.;Distance vol d'oiseau comm depart et arrivee;
+MDISTTOT_fin;Dis;d;;Distance parcourue consolidée/finale au cours du déplacement;
+indic_dist_corr;Dis_Corr;f;;La distance a été corrigé;1 : Oui / 0 : Non
+MTPSATTENT;Duree_Tsp;d;BEST12.;Temps d'attente total des transports en commun;
+MTEMPSMAP;Duree_Mch;d;BEST12.;Temps de marche au cours du déplacement;
+MTCCOND;AssisTC;f;$1.;Place assise pendant trajet en transport en commun;Place assise
+MTITR1S;TitreTC_1;f;$3.;Titre de transport utilisé pendant le trajet en TC (1er mode);Titre de transport
+MTITR2S;TitreTC_2;f;$3.;Titre de transport utilisé pendant le trajet en TC (2e mode);Titre de transport
+MTITR3S;TitreTC_3;f;$3.;Titre de transport utilisé pendant le trajet en TC (3e mode);Titre de transport
+MTITR4S;TitreTC_4;f;$3.;Titre de transport utilisé pendant le trajet en TC (4e mode);Titre de transport
+MVEH;id_VEH;c;$3.;Véhicule utilisé;
+MVEHEXT;Veh_Type;f;$2.;Type de véhicule utilisé;Type de véhicule
+MCOVF;Veh_Covoit;f;$1.;Covoiturage avec contrepartie financière;O/N
+MCOVREL;Veh_CovoitRel;f;$1.;Mise en relation avec le conducteur pour covoiturage;Mise en relation pour le covoiturage
+MVELO;id_VEL;c;$3.;Vélo utilisé;
+MSTATION;Veh_Parkg;f;$1.;Stationnement du véhicule;Stationnement
+MNBARRETT;Tn_Arrets;i;BEST12.;Nombre d'arrêts ou de visites de la tournée;
+MACCOMPID;Accomp;f;$1.;Accompagnement pendant le déplacement;O/N
+MACCOMPM;Accomp_nMen;i;BEST12.;Nombre d'accompagnants appartenant au ménage pendant le déplacement;
+MACCOMPHM;Accomp_nExt;i;BEST12.;Nombre d'accompagnants extérieurs au ménage pendant le déplacement;
+MFINCONFIRM;Dr_Dom;f;$1.;Dernier déplacement de la journée a une destination autre que domicile;Fin du déplacement
+dist_ign;Dis_Route;d;BEST12.;Distance routière origine-destination du dplct;
+TUU2017_ORI;O_ZoneTlUr;f;$2.;Tranche d'unité urbaine 2020 (calculée sur la population 2017) de la commune de départ;Tranche d'unité urbaine 2017
+TUU2017_DES;D_ZoneTlUr;f;$2.;Tranche d'unité urbaine 2020 (calculée sur la population 2017) de la commune d'arrivée;Tranche d'unité urbaine 2017
+STATUTCOM_UU_ORI;O_ZoneTyUr;f;$25.;Statut dans l'unité urbaine (calculé sur la population 2017) de la commune de départ;Statut dans l'unité urbaine (calculé sur la population 2017) de la commune
+STATUTCOM_UU_DES;D_ZoneTyUr;f;$25.;Statut dans l'unité urbaine (calculé sur la population 2017) de la commune d'arrivée;Statut dans l'unité urbaine (calculé sur la population 2017) de la commune
+TYPE_UU_ORI;O_ZoneUnUr;f;$21.;Type de l'unité urbaine de la commune de départ;Type de l'unité urbaine
+TYPE_UU_DES;D_ZoneUnUr;f;$21.;Type de l'unité urbaine de la commune d'arrivée;Type de l'unité urbaine
+TAA2017_ORI;O_ZoneRang;f;$43.;Tranche d'aire d'attraction des villes 2020 (calculée sur la population 2017) de la commune de départ;Tranche d'aire d'attraction des villes 2017
+TAA2017_DES;D_ZoneRang;f;$43.;Tranche d'aire d'attraction des villes 2020 (calculée sur la population 2017) de la commune d'arrivée;Tranche d'aire d'attraction des villes 2018
+CATCOM_AA_ORI;O_ZonePosi;f;$57.;Catégorie de la commune de départ dans l'aire d'attraction des villes 2020;Catégorie de la commune dans le zonage en aires d'attraction des villes 2020
+CATCOM_AA_DES;D_ZonePosi;f;$57.;Catégorie de la commune d'arrivée dans l'aire d'attraction des villes 2020;Catégorie de la commune dans le zonage en aires d'attraction des villes 2021
+DENSITECOM_ORI;O_ZoneDens;f;$36.;Degré de densité de la commune de départ;Degré de densité
+DENSITECOM_DES;D_ZoneDens;f;$36.;Degré de densité de la commune d'arrivée;Degré de densité
+MEMDESDEP;D_MemeDep;f;;Point d'arrivée du déplacement dans le même département que point de départ;1 : Oui / 0 : Non
+MEMDESUU;D_MemeUnu;f;;Point d'arrivée du déplacement dans la même unité urbaine que point de départ;1 : Oui / 0 : Non
+MEMDESAA;D_MemeAav;f;;Point d'arrivée du déplacement dans la même aire d'attraction que point de départ;1 : Oui / 0 : Non
+MEMDESZE;D_MemeZne;f;;Point d'arrivée du déplacement dans la même zone d'emploi que point de départ;1 : Oui / 0 : Non
+MEMDESBV;D_MemeBav;f;;Point d'arrivée du déplacement dans le même bassin de vie que point de départ;1 : Oui / 0 : Non
+pop_10min_pieton_tram_metro_ori;O_ComProx_Tcu;i;BEST12.;Part de la population de la commune d'origine à moins de 10 min à pied d'une station de métro ou de tram;
+pop_10min_pieton_tram_metro_des;D_ComProx_Tcu;i;BEST12.;Part de la population de la commune de destination à moins de 10 min à pied d'une station de métro ou de tram;
+pop_10min_pieton_train_ori;O_ComProx_Trn;i;BEST12.;Part de la population de la commune d'origine à moins de 10 min à pied d'une station de train (TER, RER et grande ligne);
+pop_10min_pieton_train_des;D_ComProx_Trn;i;BEST12.;Part de la population de la commune de destination à moins de 10 min à pied d'une station de train (TER, RER et grande ligne);
+pop_10min_voiture_tram_metro_ori;O_ComProV_Tcu;i;BEST12.;Part de la population de la commune d'origine à moins de 10 min en voiture d'une station de métro ou de tram;
+pop_10min_voiture_tram_metro_des;D_ComProV_Tcu;i;BEST12.;Part de la population de la commune de destination à moins de 10 min en voiture d'une station de métro ou de tram;
+pop_10min_voiture_train_ori;O_ComProV_Trn;i;BEST12.;Part de la population de la commune d'origine à moins de 10 min en voiture d'une station de train (TER, RER et grande ligne);
+pop_10min_voiture_train_des;D_ComProV_Trn;i;BEST12.;Part de la population de la commune de destination à moins de 10 min en voiture d'une station de train (TER, RER et grande ligne);
+precipitation_ori;O_Pluie;d;BEST12.;Précipitation du jour à l'origine du déplacement (en mm);
+temp_mini_ori;O_TempMin;d;BEST12.;Température minimum du jour à l'origine du déplacement (en °C);
+temp_maxi_ori;O_TempMax;d;BEST12.;Température maximum du jour à l'origine du déplacement (en °C);
+precipitation_des;D_Pluie;d;BEST12.;Précipitation du jour à la destination du déplacement (en mm);
+temp_mini_des;D_TempMin;d;BEST12.;Température minimum du jour à la destination du déplacement (en °C);
+temp_maxi_des;D_TempMax;d;BEST12.;Température maximum du jour à la destniation du déplacement (en °C);
+saison;EnqDate_Saison;f;$9.;Saison du jour du déplacement;
+jour_nuit_ori;O_Soleil;f;BEST12.;Position du soleil à l'origine du déplacement;Position soleil
+jour_nuit_des;D_Soleil;f;BEST12.;Position du soleil à la destination du déplacement;Position soleil
+classement_littoral_ori;O_ComLitt;f;$12.;Statut de la commune  d'origine par rapport à la loi littoral;
+classement_littoral_des;D_ComLitt;f;$12.;Statut de la commune  de destination par rapport à la loi littoral;
+classement_montagne_ori;O_ComMont;f;$1.;Statut de la commune  d'origine par rapport à la loi montagne;
+classement_montagne_des;D_ComMont;f;$1.;Statut de la commune  de destination par rapport à la loi montagne;

@@ -1,0 +1,75 @@
+Variable;Libelle;Type;Format;LibDet;RefModa
+IDENT_NUMVEH;uid_VEH2;c;$15.;Identifiant véh. tous types;
+IDENT_MEN;uid_MEN;c;$13.;Identifiant ménage;
+NUM_VEH;id_VEH;c;;Numéro du véhicule à disposition du ménage;
+pond_veh;CoeffVeh;d;;Poids du véhicule;
+KVROUL;si_Roule;f;;Ce véhicule a roulé depuis 1 ans;O/N
+cylindree_fin;Cylindree;d;;Cylindrée (en litres);
+energie_fin;Energie_Det;f;;Energie du véhicule (mention carte grise);Energie carte grise
+energie_agrege;Energie;f;;Energie du véhicule (agrege);Energie agrégé
+hybride;Energie_Hyb;f;;Type d'hybride (complément énergie agrégée);Type hybride
+energie_statinfo;Energie_Statinf;f;;Energie du véhicule (Statinfo);Energie Diffusion Sdes
+energie_CritAir;Energie_Critair;f;;Energie du véhicule (Crit'air);Energie Crit'air
+Critair;CritAir;f;;Vignette Crit'air (si connue);Vignette Crit’Air
+puis_fisc_fin;Puissance;i;;Puissance fiscale;
+ANNEE_1mec;Annee;i;;Année de 1ère mise en circulation;
+age;Age_M;i;;Age du véhicule (en mois);
+ANNEE_acq;AnneePropri;i;;Année de mise à disposition;
+dur_acq;AgePropri_M;i;;Durée de possession (en mois);
+KVAQUIV;Propri;f;;Propriétaire du véhicule;Propriétaire véhicule
+KVAQUINO01;Propri_01;f;;01ième propriétaire cité du véhicule;
+KVAQUINO02;Propri_02;f;;02ième propriétaire cité du véhicule;
+KVAQUINO03;Propri_03;f;;03ième propriétaire cité du véhicule;
+KVAQUINO04;Propri_04;f;;04ième propriétaire cité du véhicule;
+KVAQUINO05;Propri_05;f;;05ième propriétaire cité du véhicule;
+KVAQUINO06;Propri_06;f;;06ième propriétaire cité du véhicule;
+KVAQUINO07;Propri_07;f;;07ième propriétaire cité du véhicule;
+KVAQUINO08;Propri_08;f;;08ième propriétaire cité du véhicule;
+KVAQUINO09;Propri_09;f;;09ième propriétaire cité du véhicule;
+KVAQUINO10;Propri_10;f;;10ième propriétaire cité du véhicule;
+KVAQUINO11;Propri_11;f;;11ième propriétaire cité du véhicule;
+KVAQUINO12;Propri_12;f;;12ième propriétaire cité du véhicule;
+KVAQUINO13;Propri_13;f;;13ième propriétaire cité du véhicule;
+KVAQUINO14;Propri_14;f;;14ième propriétaire cité du véhicule;
+KVAQUINO15;Propri_15;f;;15ième propriétaire cité du véhicule;
+KVAQUINO16;Propri_16;f;;16ième propriétaire cité du véhicule;
+KVAQUINO17;Propri_17;f;;17ième propriétaire cité du véhicule;
+KVAQUINO18;Propri_18;f;;18ième propriétaire cité du véhicule;
+KVAQUINO19;Propri_19;f;;19ième propriétaire cité du véhicule;
+KVAQUINO20;Propri_20;f;;20ième propriétaire cité du véhicule;
+KVAQUINO21;Propri_21;f;;21ième propriétaire cité du véhicule;
+KVQUICONV01;Utilis_01;f;;01ième utilisateur cité du véhicule;
+KVQUICONV02;Utilis_02;f;;02ième utilisateur cité du véhicule;
+KVQUICONV03;Utilis_03;f;;03ième utilisateur cité du véhicule;
+KVQUICONV04;Utilis_04;f;;04ième utilisateur cité du véhicule;
+KVQUICONV05;Utilis_05;f;;05ième utilisateur cité du véhicule;
+KVQUICONV06;Utilis_06;f;;06ième utilisateur cité du véhicule;
+KVQUICONV07;Utilis_07;f;;07ième utilisateur cité du véhicule;
+KVQUICONV08;Utilis_08;f;;08ième utilisateur cité du véhicule;
+KVQUICONV09;Utilis_09;f;;09ième utilisateur cité du véhicule;
+KVQUICONV10;Utilis_10;f;;10ième utilisateur cité du véhicule;
+KVQUICONV11;Utilis_11;f;;11ième utilisateur cité du véhicule;
+KVQUICONV12;Utilis_12;f;;12ième utilisateur cité du véhicule;
+KVQUICONV13;Utilis_13;f;;13ième utilisateur cité du véhicule;
+KVQUICONV14;Utilis_14;f;;14ième utilisateur cité du véhicule;
+KVQUICONV15;Utilis_15;f;;15ième utilisateur cité du véhicule;
+KVQUICONV16;Utilis_16;f;;16ième utilisateur cité du véhicule;
+KVQUICONV17;Utilis_17;f;;17ième utilisateur cité du véhicule;
+KVQUICONV18;Utilis_18;f;;18ième utilisateur cité du véhicule;
+KVQUICONV19;Utilis_19;f;;19ième utilisateur cité du véhicule;
+KVQUICONV20;Utilis_20;f;;20ième utilisateur cité du véhicule;
+KVQUICONV21;Utilis_21;f;;21ième utilisateur cité du véhicule;
+KVQUI9COV;UtilisHorsMng f;f;;Conduite du véhicule par des pers. ext. au mén.;Fréquence conducteur ext.
+KVQUICONPV;Conducteurice;f;;Conducteur principal du véhicule;
+KVKMV;Km;d;;Nombre de kilomètres au compteur;
+indic_km_corr;Km_Meth;f;;Méthode de définition du km au compteur;Définition km véhicules
+KVKMVT;Km_Tranche;f;;Tranche kilomètres au compteur;Tranche km compteur
+KVKM1ANV;Km_12m;d;;Nombre de kilomètres parcourus au cours des 12 derniers mois;
+indic_km_annu_corr;Km_12m_Meth;f;;Méthode de définition du km annuel;Définition km véhicules
+KVKM1ANVT;Km_12m_Tranche;f;;Tranche kilomètres parcourus au cours des 12 derniers mois;Tranche km 12 mois
+KVCONS;Conso100;d;;Consommation aux 100 km;
+KVGAREJOUR;Parking_Jour;f;;Lieu de stationn. du véhicule la journée quand pas utilisé;Stationnement voiture jour
+KVGARENUIT;Parking;f;;Lieu de stationn. du véhicule la nuit (ou jour si travail de nuit);Stationnement voiture nuit
+KVGARELEC_FLAG;Prise_Flag;f;;Variable drapeau du SetOf KVGARELEC;FLAG
+KVGARELEC_A;Prise_Norm;f;;Le lieu de stationn. nuit est equipé d'une prise électrique ordinaire;1 : Oui / 0 : Non
+KVGARELEC_B;Prise_Spec;f;;Le lieu de stationn. nuit est equipé d'une prise spéciale de recharge électrique;1 : Oui / 0 : Non
