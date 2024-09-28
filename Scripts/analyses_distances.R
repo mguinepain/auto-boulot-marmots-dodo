@@ -1517,11 +1517,53 @@ regressionLog(base = valref(filter(PER_ff, !is.na(PCS42S))),
 #TODO Pour annexe 
 off()
 
-regressionLog(base = filter(mutate(valref(PER_ff), PCS42S = etqPCS42S(PCS42S)), !is.na(PCS42S)),
-              val = "Dis", formule =  "Genre + dsDomEtq  + Age10 + Activ", colComparaison = "PCS42S",
-              poids="CoeffRecEnq", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
-              titre = "Distance estimée (journée de travail),\ntou⋅tes les travailleur⋅ses", unite = "km",
-              imprDistrib = F, refDescr = ref)
+# Pour les CS détaillées
+niv_pg1 = niv_PCS42S[ 2: 7]
+niv_pg2 = niv_PCS42S[ 8:13]
+niv_pg3 = niv_PCS42S[14:19]
+
+pg1 = PER_ff |>
+  valref() |>
+  mutate(PCS42S_lib = etqPCS42S(PCS42S),
+         PCS42S = etqPCS42S(champ = PCS42S, num = T)) |>
+  filter(PCS42S_lib %in% niv_pg1) |>
+  regressionLog(val= "Dis", formule = "Genre + dsDomEtq + Age10 + Activ",
+                colComparaison = "PCS42S", poids = "CoeffRecEnqSansEMP",
+                retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
+                titre = "Distance estimée (journée de travail)\nPar PCS détaillée (1/3)",
+                unite = "km", imprDistrib = F)
+
+pg2 = PER_ff |>
+  valref() |>
+  mutate(PCS42S_lib = etqPCS42S(PCS42S),
+         PCS42S = etqPCS42S(champ = PCS42S, num = T)) |>
+  filter(PCS42S_lib %in% niv_pg2) |>
+  regressionLog(val= "Dis", formule = "Genre + dsDomEtq + Age10 + Activ",
+                colComparaison = "PCS42S", poids = "CoeffRecEnqSansEMP",
+                retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
+                titre = "Distance estimée (journée de travail)\nPar PCS détaillée (2/3)",
+                unite = "km", imprDistrib = F)
+
+pg3 = PER_ff |>
+  valref() |>
+  mutate(PCS42S_lib = etqPCS42S(PCS42S),
+         PCS42S = etqPCS42S(champ = PCS42S, num = T)) |>
+  filter(PCS42S_lib %in% niv_pg3) |>
+  regressionLog(val= "Dis", formule = "Genre + dsDomEtq + Age10 + Activ",
+                colComparaison = "PCS42S", poids = "CoeffRecEnqSansEMP",
+                retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
+                titre = "Distance estimée (journée de travail)\nPar PCS détaillée (3/3)",
+                unite = "km", imprDistrib = F)
+
+sortie("Distances/Modèle Dis par PCS42S, pg1", taille = "page")
+  print(pg1)
+off()
+sortie("Distances/Modèle Dis par PCS42S, pg2", taille = "page")
+  print(pg2)
+off()
+sortie("Distances/Modèle Dis par PCS42S, pg3", taille = "page")
+  print(pg3)
+off()
 
 
 # Modèle de référence, en remplaçant ZoneDens par km par rapport au centre
