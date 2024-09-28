@@ -1485,17 +1485,19 @@ ref = ml("femme, prof. interm., vivant et travaillant en commune urbaine à temp
          "dans une AAV de plus de 700.000 hab., 40 à 49 ans")
 
 # LE modèle de référence
-sortie("Distances/Distance parcourue journée travail, modèle", portrait = T, taille = "page")
+sortie("Distances/Distance parcourue journée travail, modèle",
+       taille = "man", h = 22, l = 16)
 regressionLog(base = valref(PER_ff),
               val = "Dis", formule =  "PCS8 + Activ + dsDomEtq + Genre + Age10",
-              poids="CoeffRecEnq", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
+              poids="CoeffRecEnqSansEMP", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
               titre = "Distance estimée (journée de travail),\ntou⋅tes les travailleur⋅ses", unite = "km",
-              imprDistrib = F, refDescr = ref)
+              imprDistrib = F, refDescr = ref,
+              caption = src_fig(emp = F))
 off()
 
 regressionLog(base = valref(PER_ff),
               val = "Dis", formule =  "PCS8 + Activ + dsTvlEtq + Genre + Age10",
-              poids="CoeffRecEnq", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
+              poids="CoeffRecEnqSansEMP", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
               titre = "Distance estimée (journée de travail),\ntou⋅tes les travailleur⋅ses", unite = "km",
               imprDistrib = F, refDescr = ref, caption = src_fig(date = "juillet 2023"))
 
@@ -1503,18 +1505,19 @@ regressionLog(base = valref(PER_ff),
 sortie("Distances/Distance parcourue journée travail, modèle, par genre", portrait = T, taille = "page")
 regressionLog(base = valref(mutate(PER_ff, Genre = etqGenre(Genre))),
               val = "Dis", formule =  "PCS8 + Activ + dsDomEtq  + Age10", colComparaison = "Genre",
-              poids="CoeffRecEnq", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
+              poids="CoeffRecEnqSansEMP", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
               titre = "Distance estimée (journée de travail),\ntou⋅tes les travailleur⋅ses", unite = "km",
-              imprDistrib = F, refDescr = ref)
+              imprDistrib = F, refDescr = ref,
+              caption = src_fig(emp = F))
 off()
 
 sortie("Distances/Distance parcourue journée travail, modèle, par PCSDet", portrait = T, taille = "page")
 regressionLog(base = valref(filter(PER_ff, !is.na(PCS42S))),
               val = "Dis", formule =  "PCS42S + dsDomEtq  + Age10", colComparaison = "Genre",
-              poids="CoeffRecEnq", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
+              poids="CoeffRecEnqSansEMP", retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
               titre = "Distance estimée (journée de travail),\ntou⋅tes les travailleur⋅ses", unite = "km",
-              imprDistrib = F, refDescr = ref)
-#TODO Pour annexe 
+              imprDistrib = F, refDescr = ref,
+              caption = src_fig(emp = F))
 off()
 
 # Pour les CS détaillées
@@ -1531,7 +1534,8 @@ pg1 = PER_ff |>
                 colComparaison = "PCS42S", poids = "CoeffRecEnqSansEMP",
                 retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
                 titre = "Distance estimée (journée de travail)\nPar PCS détaillée (1/3)",
-                unite = "km", imprDistrib = F)
+                unite = "km", imprDistrib = F, returnFig = T,
+                caption = src_fig(emp=F))
 
 pg2 = PER_ff |>
   valref() |>
@@ -1542,7 +1546,8 @@ pg2 = PER_ff |>
                 colComparaison = "PCS42S", poids = "CoeffRecEnqSansEMP",
                 retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
                 titre = "Distance estimée (journée de travail)\nPar PCS détaillée (2/3)",
-                unite = "km", imprDistrib = F)
+                unite = "km", imprDistrib = F, returnFig = T,
+                caption = src_fig(emp=F))
 
 pg3 = PER_ff |>
   valref() |>
@@ -1553,7 +1558,8 @@ pg3 = PER_ff |>
                 colComparaison = "PCS42S", poids = "CoeffRecEnqSansEMP",
                 retirerZ = T, facteurDiv = 1000, legVal = "distance estimée (km)",
                 titre = "Distance estimée (journée de travail)\nPar PCS détaillée (3/3)",
-                unite = "km", imprDistrib = F)
+                unite = "km", imprDistrib = F, returnFig = T,
+                caption = src_fig(emp=F))
 
 sortie("Distances/Modèle Dis par PCS42S, pg1", taille = "page")
   print(pg1)
@@ -1565,6 +1571,15 @@ sortie("Distances/Modèle Dis par PCS42S, pg3", taille = "page")
   print(pg3)
 off()
 
+image_read("Sorties/Distances/Modèle Dis par PCS42S, pg1.png") |>
+  image_rotate(270) |>
+  image_write("Sorties/Distances/Modèle Dis par PCS42S, pg1.png")
+image_read("Sorties/Distances/Modèle Dis par PCS42S, pg2.png") |>
+  image_rotate(270) |>
+  image_write("Sorties/Distances/Modèle Dis par PCS42S, pg2.png")
+image_read("Sorties/Distances/Modèle Dis par PCS42S, pg3.png") |>
+  image_rotate(270) |>
+  image_write("Sorties/Distances/Modèle Dis par PCS42S, pg3.png")
 
 # Modèle de référence, en remplaçant ZoneDens par km par rapport au centre
 sortie("Distances/Distance parcourue journée travail, modèle, km du centre")
