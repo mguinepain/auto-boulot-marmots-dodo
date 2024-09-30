@@ -22,7 +22,7 @@ initMémoire(BasesCharger = c("PER", "ACT"))
 # Répertoire des figures : "Horaires"
 if (!dir.exists("Sorties/Horaires")) { dir.create("Sorties/Horaires") }
 
-PER_ff = PER |> init_PER_ff() |> densitesZversPER()
+PER_ff = PER |> init_PER_ff()
 remove(PER)
 
 # Table des activités par heure ====
@@ -602,10 +602,10 @@ PER %>%
   labs(title = "Horaires atypiques selon la PCS Ménage", caption = src_fig(ACT_h))
 off()
 
-ACT_h = ACT %>%
-  filter(Tache %in% c("101", "102", "103", "104", "105", "106", "109", "810")) %>%
-  mutate(hDeb = heureHHMMtoM(hDeb), hFin = heureHHMMtoM(hFin)) %>%
-  mutate(nuit = ifelse(hFin >= 21*60 | hDeb < 6* 60, 1, 0))
+# ACT_h = ACT %>%
+#   filter(Tache %in% c("101", "102", "103", "104", "105", "106", "109", "810")) %>%
+#   mutate(hDeb = heureHHMMtoM(hDeb), hFin = heureHHMMtoM(hFin)) %>%
+#   mutate(nuit = ifelse(hFin >= 21*60 | hDeb < 6* 60, 1, 0))
 
 PER %>%
   left_join(ACT_h, by="uid_PER") %>%
@@ -682,7 +682,7 @@ g = ACT_h %>% mutate(nuitExt = nuit | soir | mati) |>
          dsTvl = factor(dsTvl, labels = qTvl)) |>
  logit(val = "nuitExt", formule = "dsDom + dsTvl + Genre + PCS8 + Age10",
        titre = "Modèle logit : probabilité du travail de nuit",
-       caption = src_fig(PER_ff), valIntervalleSur100 = 1.5, petit = T)
+       caption = src_fig(emp=F), valIntervalleSur100 = 1.5, petit = T)
 
 ACT_h %>% mutate(nuitExt = nuit | soir | mati) |>
   left_join(select(PER_ff, uid_PER, LogOcc, dsTvl, Genre, PCS8, Age10), by = "uid_PER") |>
@@ -1303,7 +1303,7 @@ g2 = tabFinZoneD_PCS %>% filter(PCS8 %in% c("03","04","05","06")) %>%
   scale_x_continuous(breaks = c(2:12)*2, limits=c(4,27)) +
   ylab("part des travailleur·ses (%) par heure") + xlab("heure de la journée") +
   labs(subtitle = "Heure de départ du lieu de travail (arrondie à l'heure)",
-       caption = src_fig(PER_ff)) +
+       caption = src_fig(emp = F)) +
   facet_wrap(~PCS8)
 
 sortie("Horaires/Horaires planche PCS et ZoneDens", taille = "page", portrait = T)
@@ -2165,7 +2165,7 @@ PER_ff |>
 regression(val = "JoTvDeb", formule = "PCS8 + NivDip + Age10 + Activ + dsTvl + Genre",
            retirerZ = T, legVal = "heure de début journée", facteurDiv = 1/60,
            titre = "Modèle H1 (tout l'échantillon)\nheure d'arrivée au lieu de travail", unite = "min",
-           imprDistrib = T) %>% summary()
+           imprDistrib = T, caption = src_fig(emp=F)) %>% summary()
 off()
 
 sortie("Horaires/Modèle horaires (mod H2)", taille = "page", portrait = F)
@@ -3574,7 +3574,6 @@ load("Data/activites.rds") ; gc()
 
 PER_ff = init_PER_ff(PER) ; remove(PER)
 PER_ff$NivDip = NivEtuVersNivDip(PER_ff$NivEtu)
-PER_ff = densitesZversPER(PER_ff)
 gc()
 
 activites = left_join(activites, select(PER_ff, uid_PER, PCS8, PCS42S, NivDip, Age10, DuTvl, pendule), by="uid_PER")
@@ -3691,7 +3690,7 @@ g = ggplot(t, aes(x = v_mTx, y = var, group=DomExt)) +
   labs(title = ml("Part médiane des personnes de la même catégorie sociale",
                   "par quartier d'habitation, ou en moyenne sur le temps passé hors domicile"),
        subtitle = "en fonction du type de secteur de résidence et de travail",
-       caption = src_fig(PER_ff)) +
+       caption = src_fig(emp=F)) +
   guides(colour = "none") +
   theme(legend.position = "bottom") +
   scale_shape(name = "Mesure", labels = c("médiane sur temps\nhors domicile",

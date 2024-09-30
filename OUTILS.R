@@ -687,52 +687,6 @@ calculer_lieuTravail = function(base, ACT, typo=F, PER = NULL, DEP = NULL)
   return(base)
 }
 
-densitesZversPER = function(PER)
-{
-  rapport("Import des densités par secteur dans la base personnelle")
-  
-  # On charge les tableaux qui, en principe, comportent la densité
-  load("Data/shp_ZF.rds")
-  load("Data/shp_COM.rds")
-  
-  # On joint la densité au lieu de résidence…
-  # Si disponible au niveau ZF, on l'utilise
-  PER_zt_zf = PER %>%
-    left_join(select(shp_ZF, CODE_ZF, densite), by=c("ZF" = "CODE_ZF")) %>%
-    filter(!is.na(densite))
-  # Sinon, on utilise la densité communale
-  PER_zt_com = PER %>%
-    left_join(select(shp_COM, insee, densite), by=c("Com" = "insee")) %>%
-    filter(!ZF %in% PER_zt_zf$ZF)
-  # On joint le tout
-  PER_zt = rbind(PER_zt_zf, PER_zt_com) %>% 
-    mutate(etiqLog = classesDensites(densite)) %>%
-    filter(Dis>0)
-  
-  # Maintenant, on fait la même chose depuis le lieu de travail
-  PER_zt_zf = PER %>%
-    left_join(select(shp_ZF, CODE_ZF, densite), by=c("ZF_travMax" = "CODE_ZF")) %>%
-    filter(!is.na(densite))
-  PER_zt_com = PER %>%
-    left_join(select(shp_COM, insee, densite), by=c("Com_travMax" = "insee")) %>%
-    filter(!ZF %in% PER_zt_zf$ZF)
-  PER_zt_trav = rbind(PER_zt_zf, PER_zt_com) %>%
-    mutate(etiqLog = classesDensites(densite)) %>%
-    filter(Dis>0)
-  
-  # On renomme de part et d'autre pour joindre ensuite ensemble
-  PER_zt = rename(PER_zt, dsDom = densite, dsDomEtq = etiqLog)
-  PER_zt_trav = rename(PER_zt_trav, dsTvl = densite, dsTvlEtq = etiqLog)
-  
-  # On joint ensemble
-  PER = left_join(PER, select(PER_zt, uid_PER, dsDom, dsDomEtq), by="uid_PER")
-  PER = left_join(PER, select(PER_zt_trav, uid_PER, dsTvl, dsTvlEtq), by="uid_PER")
-  
-  # Prêt
-  return(PER)
-}
-
-
 
 ztzf = function(table, colZF = "ZF", colZT = "ZT", suppr99 = T)
 {

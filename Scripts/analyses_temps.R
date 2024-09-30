@@ -2748,11 +2748,11 @@ page0 = cowplot::plot_grid(g32t + theme(legend.position = "none") + labs(caption
                            axis = "b", nrow = 2, ncol = 2)
 
 page = cowplot::plot_grid(page0, ggpubr::get_legend(g32t), nrow=1, ncol=2, rel_widths=c(.9, .1))
-page = cowplot::plot_grid(page,  ggpubr::text_grob(src_fig(), x=.98, y=0.5, hjust=1, vjust=.5, size=10),
+page = cowplot::plot_grid(page,  ggpubr::text_grob(src_fig(emp=F), x=.98, y=0.5, hjust=1, vjust=.5, size=10),
                           nrow=2, ncol=1, rel_heights=c(.95, .05))
 page = viz_Titre(page, "Modèles logit portant sur la probabilité de se rendre dans un commerce", rel_heights = c(5, 95))
 
-sortie("Temps/Commerces", taille = "man", h = 22.5, l = 18)
+sortie("Temps/Commerces", taille = "man", h = 21, l = 18)
 print(page)
 off()
 
@@ -2901,7 +2901,7 @@ page0 = cowplot::plot_grid(g51 + theme(legend.position = "none") + labs(caption 
                            axis = "b", nrow = 2, ncol = 2)
 
 page = cowplot::plot_grid(page0, ggpubr::get_legend(g32t), nrow=1, ncol=2, rel_widths=c(.9, .1))
-page = cowplot::plot_grid(page,  ggpubr::text_grob(src_fig(), x=.98, y=0.5, hjust=1, vjust=.5, size=10),
+page = cowplot::plot_grid(page,  ggpubr::text_grob(src_fig(emp=F), x=.98, y=0.5, hjust=1, vjust=.5, size=10),
                           nrow=2, ncol=1, rel_heights=c(.95, .05))
 page = viz_Titre(page, ml("Modèles logit portant sur la probabilité de se déplacer pour loisirs",
                           "un jour de travail"), rel_heights = c(.05, .95))

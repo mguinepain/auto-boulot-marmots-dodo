@@ -4525,7 +4525,46 @@ init_densiteZF = function(shp_ZF)
 {
   rapport("Calcul de la densité par zone fine d'après carroyage")
   
-  grille = read_sf("Sources/Mailles/carreaux_200m_met.shp")
+  # On va tout convertir en Mercator/WGS84 métrique
+  
+  grille = read_sf("Sources/Mailles/carreaux_200m_met.shp") |>
+    st_transform(crs = 3857)
+  
+  grille_mar = read_sf("Sources/Mailles/car_r02.mid") |>
+    st_set_crs(value = 3857)
+  
+  tab_mar = foreign::read.dbf("Sources/Mailles/car_r02.dbf")
+  
+  grille_reu = read_sf("Sources/Mailles/car_r04.mid") |>
+    st_set_crs(value = 3857)
+  
+  tab_reu = foreign::read.dbf("Sources/Mailles/car_r04.dbf")
+  
+  grille_mar = left_join(grille_mar, tab_mar, by = c("id", "idINSPIRE"))
+  grille_reu = left_join(grille_reu, tab_reu, by = c("id", "idINSPIRE"))
+  
+  grille_mar = rename(grille_mar, idcar_200m = id, ind = ind_c) |> select(-idINSPIRE, -idk)
+  grille_reu = rename(grille_reu, idcar_200m = id, ind = ind_c) |> select(-idINSPIRE, -idk)
+  
+  grille_om = rbind(grille_mar, grille_reu)
+  grille_om = mutate(grille_om,
+                     idcar_1km = NA, idcar_nat = NA,
+                     i_est_200 = NA, i_est_1km = NA,
+                     lcog_geo  = NA,
+                     men = NA, men_pauv = NA, men_1ind = NA, men_5ind = NA,
+                     men_prop = NA, men_fmp = NA,
+                     ind_snv = NA,
+                     men_surf = NA, men_coll = NA, men_mais = NA, log_av45 = NA,
+                     log_av45_70 = NA, log_45_70 = NA, log_70_90 = NA, log_ap90 = NA,
+                     log_inc = NA, log_soc = NA,
+                     ind_0_3 = NA, ind_4_5 = NA, ind_6_10 = NA, ind_11_17 = NA,
+                     ind_18_24 = NA, ind_25_39 = NA, ind_40_54 = NA,
+                     ind_55_64 = NA, ind_65_79 = NA, ind_80p = NA,
+                     ind_inc = NA)
+  
+  grille_om = select(grille_om, colnames(grille))
+  
+  grille = rbind(grille, grille_om)
   
   # Approche 1 : avec changement de maillage complet
   # grille$surf1 = as.double(st_area(grille))
@@ -4542,7 +4581,7 @@ init_densiteZF = function(shp_ZF)
   # il y a une intersection
   grille$surf = as.double(st_area(grille)/10^6) # for some reason, pas exactement 0,04 km²
   
-  grilleZF = st_intersection(grille, shp_ZF) %>%
+  grilleZF = st_intersection(grille, st_transform(shp_ZF, crs=3857)) %>%
     group_by(CODE_ZF) %>%
     st_drop_geometry() %>%
     summarise(pop = sum(ind), surf = sum(surf))
@@ -4564,10 +4603,47 @@ init_densiteCom = function(shp_COM)
   
   if (!"grille" %in% ls()) {
     grille = read_sf("Sources/Mailles/carreaux_200m_met.shp")
+
+    grille_mar = read_sf("Sources/Mailles/car_r02.mid") |>
+      st_set_crs(value = 3857)
+    
+    tab_mar = foreign::read.dbf("Sources/Mailles/car_r02.dbf")
+    
+    grille_reu = read_sf("Sources/Mailles/car_r04.mid") |>
+      st_set_crs(value = 3857)
+    
+    tab_reu = foreign::read.dbf("Sources/Mailles/car_r04.dbf")
+    
+    grille_mar = left_join(grille_mar, tab_mar, by = c("id", "idINSPIRE"))
+    grille_reu = left_join(grille_reu, tab_reu, by = c("id", "idINSPIRE"))
+    
+    grille_mar = rename(grille_mar, idcar_200m = id, ind = ind_c) |> select(-idINSPIRE, -idk)
+    grille_reu = rename(grille_reu, idcar_200m = id, ind = ind_c) |> select(-idINSPIRE, -idk)
+    
+    grille_om = rbind(grille_mar, grille_reu)
+    grille_om = mutate(grille_om,
+                       idcar_1km = NA, idcar_nat = NA,
+                       i_est_200 = NA, i_est_1km = NA,
+                       lcog_geo  = NA,
+                       men = NA, men_pauv = NA, men_1ind = NA, men_5ind = NA,
+                       men_prop = NA, men_fmp = NA,
+                       ind_snv = NA,
+                       men_surf = NA, men_coll = NA, men_mais = NA, log_av45 = NA,
+                       log_av45_70 = NA, log_45_70 = NA, log_70_90 = NA, log_ap90 = NA,
+                       log_inc = NA, log_soc = NA,
+                       ind_0_3 = NA, ind_4_5 = NA, ind_6_10 = NA, ind_11_17 = NA,
+                       ind_18_24 = NA, ind_25_39 = NA, ind_40_54 = NA,
+                       ind_55_64 = NA, ind_65_79 = NA, ind_80p = NA,
+                       ind_inc = NA)
+    
+    grille_om = select(grille_om, colnames(grille))
+    
+    grille = rbind(grille, grille_om)
+    
     grille$surf = as.double(st_area(grille)/10^6)
   }
   
-  grilleCom = st_intersection(grille, st_transform(shp_COM, crs=2154)) %>%
+  grilleCom = st_intersection(grille, st_transform(shp_COM, crs=3857)) %>%
     group_by(insee) %>%
     st_drop_geometry() %>%
     summarise(pop = sum(ind), surf = sum(surf))
@@ -4577,6 +4653,53 @@ init_densiteCom = function(shp_COM)
   
   return(shp_COM)
 }
+
+densitesZversPER = function(PER)
+{
+  rapport("Import des densités par secteur dans la base personnelle")
+  
+  # On charge les tableaux qui, en principe, comportent la densité
+  load("Data/shp_ZF.rds")
+  load("Data/shp_COM.rds")
+  
+  # On joint la densité au lieu de résidence…
+  # Si disponible au niveau ZF, on l'utilise
+  PER_zt_zf = PER %>%
+    left_join(select(shp_ZF, CODE_ZF, densite), by=c("ZF" = "CODE_ZF")) %>%
+    filter(!is.na(densite))
+  # Sinon, on utilise la densité communale
+  PER_zt_com = PER %>%
+    left_join(select(shp_COM, insee, densite), by=c("Com" = "insee")) %>%
+    filter(!ZF %in% PER_zt_zf$ZF)
+  # On joint le tout
+  PER_zt = rbind(PER_zt_zf, PER_zt_com) %>% 
+    mutate(etiqLog = classesDensites(densite)) %>%
+    filter(Dis>0)
+  
+  # Maintenant, on fait la même chose depuis le lieu de travail
+  PER_zt_zf = PER %>%
+    left_join(select(shp_ZF, CODE_ZF, densite), by=c("ZF_travMax" = "CODE_ZF")) %>%
+    filter(!is.na(densite))
+  PER_zt_com = PER %>%
+    left_join(select(shp_COM, insee, densite), by=c("Com_travMax" = "insee")) %>%
+    filter(!ZF %in% PER_zt_zf$ZF)
+  PER_zt_trav = rbind(PER_zt_zf, PER_zt_com) %>%
+    mutate(etiqLog = classesDensites(densite)) %>%
+    filter(Dis>0)
+  
+  # On renomme de part et d'autre pour joindre ensuite ensemble
+  PER_zt = rename(PER_zt, dsDom = densite, dsDomEtq = etiqLog)
+  PER_zt_trav = rename(PER_zt_trav, dsTvl = densite, dsTvlEtq = etiqLog)
+  
+  # On joint ensemble
+  PER = left_join(PER, select(PER_zt, uid_PER, dsDom, dsDomEtq), by="uid_PER")
+  PER = left_join(PER, select(PER_zt_trav, uid_PER, dsTvl, dsTvlEtq), by="uid_PER")
+  
+  # Prêt
+  return(PER)
+}
+
+
 
 # Exécution du tout =====
 
@@ -4881,6 +5004,9 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
   PER$uid_VEH = ifelse(is.na(PER$uid_VEH.y), PER$uid_VEH.x, PER$uid_VEH.y)
   PER$uid_VEH = as.character(PER$uid_VEH)
   PER$uid_VEH.x = NULL ; PER$uid_VEH.y = NULL
+  
+  # Nouveau carroyage
+  PER = densitesZversPER(PER)
   
   save(VEH, file = "Data/VEH.rds") ; remove(VEH)
   save(PER, file = "Data/PER.rds")

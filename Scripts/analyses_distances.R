@@ -38,9 +38,11 @@ PER_f = PER %>%
 PER_ff = densitesZversPER(PER_ff)
 PER_f = densitesZversPER(PER_f)
 
-load("Data/MEN.rds") ; load("Data/ACT.rds")
+load("Data/MEN.rds")
 PER_ff = left_join(PER_ff, select(MEN, uid_MEN, MenBebe), by = "uid_MEN")
 remove(MEN)
+
+load("Data/ACT.rds")
 
 # Généralités ===================================================================
 
@@ -108,95 +110,97 @@ PER_ff |>
 
 
 # Tableau distances médianes selon classe de densité
-weighted.quantile(PER_ff$dsDom, PER_ff$CoeffRecEnq, probs = c(0, .25, .5, .75, 1))
-weighted.quantile(PER_ff$dsTvl, PER_ff$CoeffRecEnq, probs = c(0, .25, .5, .75, 1))
+weighted.quantile(PER_ff$dsDom, PER_ff$CoeffRecEnqSansEMP, probs = c(0, .25, .5, .75, 1))
+weighted.quantile(PER_ff$dsTvl, PER_ff$CoeffRecEnqSansEMP, probs = c(0, .25, .5, .75, 1))
 
-PER_ff |> mutate(ds4dom = case_when(dsDom < 800 ~ "4",
-                                   dsDom < 2500 ~ "3",
-                                   dsDom < 8500 ~ "2",
-                                   dsDom >= 8500 ~ "1"),
-                ds4tvl = case_when(dsTvl < 800 ~ "4",
-                                   dsTvl < 2500 ~ "3",
-                                   dsTvl < 8500 ~ "2",
-                                   dsTvl >= 8500 ~ "1")) |>
+PER_ff |> mutate(ds4dom = case_when(dsDom < 400 ~ "4",
+                                   dsDom < 1200 ~ "3",
+                                   dsDom < 4000 ~ "2",
+                                   dsDom >= 4000 ~ "1"),
+                ds4tvl = case_when(dsTvl < 400 ~ "4",
+                                   dsTvl < 1200 ~ "3",
+                                   dsTvl < 4000 ~ "2",
+                                   dsTvl >= 4000 ~ "1")) |>
   group_by(ds4dom, ds4tvl) |>
   summarise(n = n(),
-            dis = weighted.median(Dis, CoeffRecEnq),
-            tps = weighted.median(Tps, CoeffRecEnq))
+            dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+            tps = weighted.median(Tps, CoeffRecEnqSansEMP)) |>
+  filter(!is.na(ds4tvl))
 
-PER_ff |> mutate(ds4dom = case_when(dsDom < 800 ~ "4",
-                                    dsDom < 2500 ~ "3",
-                                    dsDom < 8500 ~ "2",
-                                    dsDom >= 8500 ~ "1")) |>
+PER_ff |> mutate(ds4dom = case_when(dsDom < 400 ~ "4",
+                                    dsDom < 1200 ~ "3",
+                                    dsDom < 4000 ~ "2",
+                                    dsDom >= 4000 ~ "1")) |>
   group_by(ds4dom) |>
   summarise(n = n(),
-            dis = weighted.median(Dis, CoeffRecEnq),
-            tps = weighted.median(Tps, CoeffRecEnq))
+            dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+            tps = weighted.median(Tps, CoeffRecEnqSansEMP))
 
-PER_ff |> mutate(ds4tvl = case_when(dsTvl < 800 ~ "4",
-                                    dsTvl < 2500 ~ "3",
-                                    dsTvl < 8500 ~ "2",
-                                    dsTvl >= 8500 ~ "1")) |>
+PER_ff |> mutate(ds4tvl = case_when(dsTvl < 400 ~ "4",
+                                    dsTvl < 1200 ~ "3",
+                                    dsTvl < 4000 ~ "2",
+                                    dsTvl >= 4000 ~ "1")) |>
   group_by(ds4tvl) |>
   summarise(n = n(),
-            dis = weighted.median(Dis, CoeffRecEnq),
-            tps = weighted.median(Tps, CoeffRecEnq))
+            dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+            tps = weighted.median(Tps, CoeffRecEnqSansEMP))
 
 PER_ff |>   summarise(n = n(),
-            dis = weighted.median(Dis, CoeffRecEnq),
-            tps = weighted.median(Tps, CoeffRecEnq))
+            dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+            tps = weighted.median(Tps, CoeffRecEnqSansEMP))
 
 
-PER_ff |> mutate(ds4dom = case_when(dsDom < 800 ~ "4",
-                                    dsDom < 2500 ~ "3",
-                                    dsDom < 8500 ~ "2",
-                                    dsDom >= 8500 ~ "1"),
-                 ds4tvl = case_when(dsTvl < 800 ~ "4",
-                                    dsTvl < 2500 ~ "3",
-                                    dsTvl < 8500 ~ "2",
-                                    dsTvl >= 8500 ~ "1")) |>
+PER_ff |> mutate(ds4dom = case_when(dsDom < 400 ~ "4",
+                                    dsDom < 1200 ~ "3",
+                                    dsDom < 4000 ~ "2",
+                                    dsDom >= 4000 ~ "1"),
+                 ds4tvl = case_when(dsTvl < 400 ~ "4",
+                                    dsTvl < 1200 ~ "3",
+                                    dsTvl < 4000 ~ "2",
+                                    dsTvl >= 4000 ~ "1")) |>
   filter(schAct == "DOMICILE → TRAVAIL → DOMICILE") |>
   group_by(ds4dom, ds4tvl) |>
   summarise(n = n(),
             dis = weighted.median(Dis, CoeffRecEnq),
-            tps = weighted.median(Tps, CoeffRecEnq))
+            tps = weighted.median(Tps, CoeffRecEnq)) |>
+  filter(!is.na(ds4tvl))
 
-PER_ff |> mutate(ds4dom = case_when(dsDom < 800 ~ "4",
-                                    dsDom < 2500 ~ "3",
-                                    dsDom < 8500 ~ "2",
-                                    dsDom >= 8500 ~ "1")) |>
+PER_ff |> mutate(ds4dom = case_when(dsDom < 400 ~ "4",
+                                    dsDom < 1200 ~ "3",
+                                    dsDom < 4000 ~ "2",
+                                    dsDom >= 4000 ~ "1")) |>
   filter(schAct == "DOMICILE → TRAVAIL → DOMICILE") |>
   group_by(ds4dom) |>
   summarise(n = n(),
-            dis = weighted.median(Dis, CoeffRecEnq),
-            tps = weighted.median(Tps, CoeffRecEnq))
+            dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+            tps = weighted.median(Tps, CoeffRecEnqSansEMP))
 
-PER_ff |> mutate(ds4tvl = case_when(dsTvl < 800 ~ "4",
-                                    dsTvl < 2500 ~ "3",
-                                    dsTvl < 8500 ~ "2",
-                                    dsTvl >= 8500 ~ "1")) |>
+PER_ff |> mutate(ds4tvl = case_when(dsTvl < 400 ~ "4",
+                                    dsTvl < 1200 ~ "3",
+                                    dsTvl < 4000 ~ "2",
+                                    dsTvl >= 4000 ~ "1")) |>
   filter(schAct == "DOMICILE → TRAVAIL → DOMICILE") |>
   group_by(ds4tvl) |>
   summarise(n = n(),
-            dis = weighted.median(Dis, CoeffRecEnq),
-            tps = weighted.median(Tps, CoeffRecEnq))
+            dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+            tps = weighted.median(Tps, CoeffRecEnqSansEMP))
 
 PER_ff |>   
   filter(schAct == "DOMICILE → TRAVAIL → DOMICILE") |>
   summarise(n = n(),
-                      dis = weighted.median(Dis, CoeffRecEnq),
-                      tps = weighted.median(Tps, CoeffRecEnq))
+                      dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+                      tps = weighted.median(Tps, CoeffRecEnqSansEMP))
 
 # Chiffres selon densité
-weighted.median(filter(PER_ff, !is.na(CoeffRecEnq))$dsDom, filter(PER_ff, !is.na(CoeffRecEnq))$CoeffRecEnq, na.rm=T)
+weighted.median(filter(PER_ff, !is.na(CoeffRecEnqSansEMP))$dsDom, filter(PER_ff, !is.na(CoeffRecEnqSansEMP))$CoeffRecEnqSansEMP, na.rm=T)
 
 PER_ff |>
-  filter(dsDom > 800, dsDom < 8500, !is.na(CoeffRecEnq)) |>
+  filter(dsDom > 400, dsDom < 4000, !is.na(CoeffRecEnq)) |>
   group_by(PCS8) |>
-  summarise(moy_dis = weighted.mean(Dis, CoeffRecEnq),
-            med_dis = weighted.median(Dis, CoeffRecEnq),
-            moy_tps = weighted.mean(Tps, CoeffRecEnq, na.rm=T),
-            med_tps = weighted.median(Tps, CoeffRecEnq))
+  summarise(moy_dis = weighted.mean(Dis, CoeffRecEnqSansEMP),
+            med_dis = weighted.median(Dis, CoeffRecEnqSansEMP),
+            moy_tps = weighted.mean(Tps, CoeffRecEnqSansEMP, na.rm=T),
+            med_tps = weighted.median(Tps, CoeffRecEnqSansEMP))
 
 # Gros temps de depl
 PER_ff |>
@@ -4767,7 +4771,7 @@ modDep = PER_PEC %>%
         valIntervalleSur100 = 5,
         titre = "Modèle logit portant sur la probabilité\nde disposer d'un véhicule de fonction",
         caption = src_fig(emp = F, date = "février 2023"),
-        colComparaison = "Type")
+        colComparaison = "Type", petit = T)
 print(modDep)
 off()
 

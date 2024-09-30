@@ -299,7 +299,7 @@ g = PER |> filter(Activ %in% c("10", "11"),
                                 VeilleTrav == "VeilleTrav3" ~ "télétravaillé")) |>
   mutate(Genre = etqGenre(Genre)) |>
   ggplot(aes(x = dsDomEtq, y = p)) +
-  geom_line(aes(colour = VeilleTrav, group = VeilleTrav)) +
+  geom_line(aes(colour = VeilleTrav, group = VeilleTrav), linetype = 2) +
   geom_point(aes(colour = VeilleTrav)) +
   facet_grid(rows = "Genre") +
   ylab("Part des journées en emploi (%)") + xlab("Densité dans le secteur (hab/km²)") +

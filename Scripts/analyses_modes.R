@@ -16,9 +16,6 @@ rapport("Script Chap6", prim=T)
 
 if(!dir.exists("Sorties/Modes")) { dir.create("Sorties/Modes") }
 
-# On récupère la densité au lieu de domicile et au lieu de travail dans la base
-PER = densitesZversPER(PER)
-
 PER_ff = init_PER_ff(PER)
 # Quelques champs supplémentaires pour l'analyse
 PER_ff = mutate(PER_ff,
@@ -190,62 +187,65 @@ sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Dis_VOI > 0)$Coe
 
 sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Handi == "2")$CoeffRecEnq) / sum(filter(PER_ff, !is.na(Handi) & !is.na(CoeffRecEnq))$CoeffRecEnq)
 
-sum(filter(PER_ff, !is.na(CoeffRecEnq), Permis == "1", dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(Permis), !is.na(CoeffRecEnq), dsDom>6400)$CoeffRecEnq)
-sum(filter(PER_ff, !is.na(CoeffRecEnq), Permis == "1", dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(Permis), !is.na(CoeffRecEnq), dsDom<6400)$CoeffRecEnq)
+medDsDom = weighted.median(PER_ff$dsDom, PER_ff$CoeffRecEnqSansEMP)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "1" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "1" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "1" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "1" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "1" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff, !is.na(CoeffRecEnq), Permis == "1", dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(Permis), !is.na(CoeffRecEnq), dsDom>1200)$CoeffRecEnq)
+sum(filter(PER_ff, !is.na(CoeffRecEnq), Permis == "1", dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(Permis), !is.na(CoeffRecEnq), dsDom<1200)$CoeffRecEnq)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "2" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "2" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "2" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "2" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "2" & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "1" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "1" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "1" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "1" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "1" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "1" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "1" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "1" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "1" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "1" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "2" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "2" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "2" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "2" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "2" & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "2" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "2" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "2" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "2" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "2" & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "1" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "1" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "1" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "1" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "1" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "1" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & Permis == "2" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & Permis == "2" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & Permis == "2" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & Permis == "2" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & Permis == "2" & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, Permis == "2" & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
 
 PER_ff = left_join(PER_ff, select(MEN, uid_MEN, VehN), by="uid_MEN")
 
-sum(filter(PER_ff, !is.na(CoeffRecEnq), VehN > 0, dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(CoeffRecEnq), dsDom>6400)$CoeffRecEnq)
-sum(filter(PER_ff, !is.na(CoeffRecEnq), VehN > 0, dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(CoeffRecEnq), dsDom<6400)$CoeffRecEnq)
+sum(filter(PER_ff, !is.na(CoeffRecEnq), VehN > 0, dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(CoeffRecEnq), dsDom>1200)$CoeffRecEnq)
+sum(filter(PER_ff, !is.na(CoeffRecEnq), VehN > 0, dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(CoeffRecEnq), dsDom<1200)$CoeffRecEnq)
 
+nrow(filter(PER_ff, !is.na(CoeffRecEnq), VehN == 0, dsDom < 1200)) 
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN > 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 0 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 0 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_ff, VehN == 0 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
 
 
 
@@ -263,59 +263,59 @@ sum(PER_fff$CoeffRecEnq, na.rm=T) / sum(PER_ff$CoeffRecEnq, na.rm=T)
 
 sum(filter(PER_fff, VehN == 1)$CoeffRecEnq, na.rm=T) / sum(PER_fff$CoeffRecEnq, na.rm=T)
 
-sum(filter(PER_fff, VehN == 1, dsDom > 6400)$CoeffRecEnq, na.rm=T) / sum(filter(PER_fff, dsDom > 6400)$CoeffRecEnq, na.rm=T)
-sum(filter(PER_fff, VehN == 1, dsDom < 6400)$CoeffRecEnq, na.rm=T) / sum(filter(PER_fff, dsDom < 6400)$CoeffRecEnq, na.rm=T)
+sum(filter(PER_fff, VehN == 1, dsDom > 1200)$CoeffRecEnq, na.rm=T) / sum(filter(PER_fff, dsDom > 1200)$CoeffRecEnq, na.rm=T)
+sum(filter(PER_fff, VehN == 1, dsDom < 1200)$CoeffRecEnq, na.rm=T) / sum(filter(PER_fff, dsDom < 1200)$CoeffRecEnq, na.rm=T)
 
-sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_ff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_ff, !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 1 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 1 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 1 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 1 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 1 & dsDom > 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 1 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 1 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 1 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 1 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 1 & dsDom > 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom > 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom > 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom > 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom > 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom > 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom > 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom > 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom > 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom > 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom > 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
 
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom > 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom > 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom > 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom > 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom > 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom > 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom > 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom > 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom > 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom > 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom > 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
 
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN > 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN > 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN > 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN > 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN > 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN > 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom < 6400)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom < 1200)$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0)$CoeffRecEnq)
 
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom < 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom < 6400  & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom < 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom < 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom < 6400 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom < 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom < 1200  & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom < 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom < 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom < 1200 & Genre == "H")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "H")$CoeffRecEnq)
 
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom < 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom < 6400  & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom < 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom < 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom < 6400 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 6400 & Dis>0 & Genre == "F")$CoeffRecEnq)
-
-
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_BUS + Dis_TRN > 0 & VehN == 1 & dsDom < 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VOI > 0 & VehN == 1 & dsDom < 1200  & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_MAR > 0 & VehN == 1 & dsDom < 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_VEL > 0 & VehN == 1 & dsDom < 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
+sum(filter(PER_fff,!is.na(CoeffRecEnq) & Dis_DRM > 0 & VehN == 1 & dsDom < 1200 & Genre == "F")$CoeffRecEnq) / sum(filter(PER_fff, VehN == 1 & !is.na(CoeffRecEnq) & dsDom < 1200 & Dis>0 & Genre == "F")$CoeffRecEnq)
 
 
 
 
-sum(filter(PER_ff, dsDom > 6400)$CoeffRecEnq, na.rm=T) / sum(PER_ff$CoeffRecEnq, na.rm=T)
+
+
+sum(filter(PER_ff, dsDom > 1200)$CoeffRecEnq, na.rm=T) / sum(PER_ff$CoeffRecEnq, na.rm=T)
 
 quantile(PER_ff$dsDom, na.rm=T)
 
@@ -1057,8 +1057,10 @@ PER_ff %>%
   geom_point(aes(color = modes)) +
   facet_grid(rows="Genre")
 
+# la classe supérieure de densité concerne très peu de personnes, mieux vaut la retirer ici
+
 modes_d = PER_ff %>%
-  filter(!is.na(dsDomEtq)) %>%
+  filter(!is.na(dsDomEtq) & dsDom < 25000) %>%
   mutate(across(starts_with("modes_"), ~ifelse(.==T, CoeffRecEnq, 0))) %>%
   group_by(dsDomEtq) %>%
   summarise(across(starts_with("modes_"), ~sum(., na.rm=T)),
@@ -1068,7 +1070,7 @@ modes_d = PER_ff %>%
   mutate(modes = substr(modes, 7, nchar(modes))) %>%
   filter(!modes %in% c("avion", "bateau", "métro", "motor", "tc_light", "tgv", "trott")) %>%
   ggplot(aes(x = dsDomEtq, y = p)) +
-  geom_line(aes(color = modes, group = modes)) +
+  geom_line(aes(color = modes, group = modes), linetype = 2) +
   geom_point(aes(color = modes)) +
   scale_color_manual(values = palModes(rev(c("voiture", "vélo", "car interurbain", "train",
                                 "t. c. non précisé", "marche", "deux roues"))),
@@ -1080,7 +1082,7 @@ modes_d = PER_ff %>%
        caption = src_fig(filter(PER_ff, !is.null(dsDomEtq))))
 
 modes_d2 = PER_ff %>%
-  filter(!is.na(dsTvlEtq)) %>%
+  filter(!is.na(dsTvlEtq) & dsTvl < 25000) %>%
   mutate(across(starts_with("modes_"), ~ifelse(.==T, CoeffRecEnq, 0))) %>%
   group_by(dsTvlEtq) %>%
   summarise(across(starts_with("modes_"), ~sum(., na.rm=T)),
@@ -1090,7 +1092,7 @@ modes_d2 = PER_ff %>%
   mutate(modes = substr(modes, 7, nchar(modes))) %>%
   filter(!modes %in% c("avion", "bateau", "métro", "motor", "tc_light", "tgv", "trott")) %>%
   ggplot(aes(x = dsTvlEtq, y = p)) +
-  geom_line(aes(color = modes, group = modes)) +
+  geom_line(aes(color = modes, group = modes), linetype=2) +
   geom_point(aes(color = modes)) +
   scale_color_manual(values = palModes(rev(c("voiture", "vélo", "car interurbain", "train",
                                              "t. c. non précisé", "marche", "deux roues"))),
@@ -1099,22 +1101,31 @@ modes_d2 = PER_ff %>%
   xlab("Densité du secteur de résidence (hab/km²)") +
   ylab("Part des travailleur⋅ses s'étant déplacé⋅es") +
   labs(title = "Utilisation des modes de transport selon la densité du secteur de travail",
-       caption = src_fig(filter(PER_ff, !is.null(dsTvlEtq))))
+       caption = src_fig(emp = F))
 
 sortie("Modes/Modes selon densité")
-cowplot::plot_grid(modes_d  + labs(caption = NULL) + xlab(NULL),
-                   modes_d2 + theme(legend.position = "none"),
-                   nrow = 2, axis = "lr", align = "v", rel_heights=c(.46, .52))
+cowplot::plot_grid(modes_d  + labs(caption = NULL) + xlab(NULL) + theme(axis.text.x = element_blank()),
+                   modes_d2 + theme(legend.position = "none") + theme(axis.text.x = element_text(hjust=1, angle=45)),
+                   nrow = 2, axis = "lr", align = "v", rel_heights=c(.4, .6))
 off()
 
 sum(PER_ff$Dis_MAR, na.rm=T) / sum(PER_ff$Dis, na.rm=T)
 sum(PER_ff$Dis_VOI, na.rm=T) / sum(PER_ff$Dis, na.rm=T)
 
+mdDsDom = weighted.median(PER_ff$dsDom, PER_ff$CoeffRecEnqSansEMP)
+mean(filter(MEN, uid_MEN %in% filter(PER_ff, dsDom < mdDsDom)$uid_MEN)$VelN, na.rm=T)
+mean(filter(MEN, uid_MEN %in% filter(PER_ff, dsDom > mdDsDom)$uid_MEN)$VelN, na.rm=T)
+
+sum(filter(PER_ff, dsDom <= 1600)$CoeffRecEnqSansEMP, na.rm=T) / sum(PER_ff$CoeffRecEnqSansEMP, na.rm=T)
+sum(filter(PER_ff, dsTvl <= 1600)$CoeffRecEnqSansEMP, na.rm=T) / sum(PER_ff$CoeffRecEnqSansEMP, na.rm=T)
+
+sum(filter(PER_ff, dsTvl > 25000)$CoeffRecEnqSansEMP, na.rm=T) / sum(PER_ff$CoeffRecEnqSansEMP, na.rm=T)
+
 sum(filter(PER_ff, dsDomEtq == "< 200")$Dis_MAR, na.rm=T) / sum(filter(PER_ff, dsDomEtq == "< 200")$Dis, na.rm=T)
 sum(filter(PER_ff, dsDomEtq == "> 25000")$Dis_MAR, na.rm=T) / sum(filter(PER_ff, dsDomEtq == "> 25000")$Dis, na.rm=T)
 sum(filter(PER_ff, dsTvlEtq == "> 25000")$Dis_MAR, na.rm=T) / sum(filter(PER_ff, dsTvlEtq == "> 25000")$Dis, na.rm=T)
 
-modes_etu = PER %>%
+modes_etu = PER %>% filter(dsDom < 25000) |>
   filter(Activ %in% c("21", "22"), Age < 18) %>%
   left_join(select(shp_ZF, CODE_ZF, densite), by=c("ZF" = "CODE_ZF")) %>%
   filter(!is.na(densite)) %>%
@@ -1128,7 +1139,7 @@ modes_etu = PER %>%
   mutate(modes = substr(modes, 7, nchar(modes))) %>%
   filter(!modes %in% c("avion", "bateau", "métro", "motor", "tc_light", "tgv", "trott")) %>%
   ggplot(aes(x = etiqLog, y = p)) +
-  geom_line(aes(color = modes, group = modes)) +
+  geom_line(aes(color = modes, group = modes), linetype=2) +
   geom_point(aes(color = modes)) +
   scale_color_manual(values = palModes(rev(c("voiture", "vélo", "car interurbain", "train",
                                              "t. c. non précisé", "marche", "deux roues"))),
@@ -1140,7 +1151,7 @@ modes_etu = PER %>%
        subtitle = "Élèves et étudiant⋅es de moins de 18 ans uniquement",
        caption = src_fig(emp = F))
 
-sortie(nom = "Modes/Modes élèves", taille = "bande")
+sortie(nom = "Modes/Modes élèves", taille = "man", h = 8, l = 17)
 print(modes_etu)
 off()
 
@@ -1586,9 +1597,9 @@ g2 = PER_veh %>%
   mutate(vehElec = Energie %in% c("Hybride", "Électrique")) %>%
   logit(val = "vehElec", formule = "PCS8 + Activ + Genre + Age10 + dsDomEtq")
 
-g = cowplot::plot_grid(g1 + ggtitle("Modèle linéaire portant\nsur l'âge du véhicule"),
-                       g2 + ggtitle("Modèle logit portant sur \nla motorisation électrique/hybride"),
-                       nrow = 1, labels = c("A", "M"))
+g = cowplot::plot_grid(g1 + labs(title = "Modèle linéaire portant\nsur l'âge du véhicule", caption = NULL) + theme(legend.position = "none", axis.text.x = element_text(angle=45, hjust=1)),
+                       g2 + labs(title = "Modèle logit portant sur \nla motorisation électrique/hybride", caption = src_fig(emp = F)) + theme(axis.text.x = element_text(angle=45, hjust=1)),
+                       nrow = 1, labels = c("A", "M"), align = "h", rel_widths = c(45,55))
 
 sortie("Modes/Modèles véhicules")
   print(g)
@@ -2127,8 +2138,8 @@ base = OPI %>% filter(Activ %in% c("10", "11", "12", "31"), PCS8 %in% c("01", "0
 sortie("Modes/Modèle TCO", portrait=T)
 logit(tab = valref(base), val = "plusTco", formule = "Age + Genre + PCS8 + dsDomEtq + Fqc_Tco + Fqc_Vco",
       titre = ml("« Il faut continuer à développer les transports",
-                 "en commun, même si on est obligé pour cela de",
-                 "gêner les automobilistes »"), caption = src_fig(filter(PER, uid_PER %in% OPI$uid_PER)))
+                 "en commun, même si on est obligé pour cela",
+                 "de gêner les automobilistes »"), caption = src_fig(filter(PER, uid_PER %in% OPI$uid_PER)))
 off()
 
 logit(tab = mutate(base, Fqc_Tco = etqFqc(Fqc_Tco), Fqc_Tco = factor(Fqc_Tco, levels = c("Jamais", "Parfois", "Mensuel", "Quotid."))),
@@ -2915,7 +2926,7 @@ g = PER_ff |>
        caption = src_fig(emp=F))
 
 sortie("Modes/Journées à pied")
-  print(g)
+print(g)
 off()
 
 PER_ff |>
@@ -3047,7 +3058,7 @@ g = tab |>
   ylab("Temps de marche moyen avant et après (min.)")
 
 sortie("Modes/Marche Avant Après transports")
-  print(g)
+print(g)
 off()
 
 TRJ |>
@@ -3134,22 +3145,22 @@ nivModes = nivModes[nivModes %in% tab$ModeP]
 
 # Motif = factor(Motif, levels = nivMotifs)) |>
 tab2 = tibble(ModeP = lapply(nivModes, rep, times = length(levels(tab$Motif))) |> unlist(),
-             Motif = rep(levels(tab$Motif), times = length(nivModes))) |>
+              Motif = rep(levels(tab$Motif), times = length(nivModes))) |>
   mutate(ModeP = factor(ModeP, levels = nivModes)) |> 
   left_join(tab, by = c("ModeP", "Motif"))
 
 echelleMotifs = scale_fill_manual(breaks = rev(nivMotifs),
-                    values = rev(c("violetred",
-                               "violet",
-                               "pink",
-                               "salmon",
-                               "indianred",
-                               "lightblue",
-                               "lightblue3",
-                               "skyblue3",
-                               "purple3",
-                               "slateblue",
-                               "lightgrey")))
+                                  values = rev(c("violetred",
+                                                 "violet",
+                                                 "pink",
+                                                 "salmon",
+                                                 "indianred",
+                                                 "lightblue",
+                                                 "lightblue3",
+                                                 "skyblue3",
+                                                 "purple3",
+                                                 "slateblue",
+                                                 "lightgrey")))
 
 gAbs = ggplot(tab2, aes(x = ModeP, y = nb)) +
   geom_col(aes(fill = Motif, group = ModeP), position = "stack") +
@@ -3175,7 +3186,7 @@ g = cowplot::plot_grid(gAbs + theme(legend.position = "none",
                        rel_heights=c(3, 7))
 
 sortie("Modes/Motifs déplacements selon mode")
-  print(g)
+print(g)
 off()
 
 # nb déps en voiture domtrav / total
@@ -3231,7 +3242,7 @@ gRelDs = ggplot(tab2, aes(x = ModeP, y = p)) +
        caption = src_fig(emp = F))
 
 sortie("Modes/Motifs déplacements selon mode et ds")
-  print(gRelDs + theme(axis.text.x = element_text(angle = 45, hjust = 1)))
+print(gRelDs + theme(axis.text.x = element_text(angle = 45, hjust = 1)))
 off()
 
 tabGr = DEP |>
@@ -3318,7 +3329,7 @@ g = cowplot::plot_grid(gMdMar + labs(title="Modèle générique", caption=NULL) 
   viz_Titre("Modèles logit estimant la probabilité d'un recours\nà la marche au cours de la journée")
 
 sortie("Modes/Mod marche")
-  print(g)
+print(g)
 off()
 # tab |>
 #   select(ModeP, Motif, nb) |>
