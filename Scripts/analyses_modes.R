@@ -735,7 +735,7 @@ for(i in 1:length(mliste))
 tableau$variante = as.factor(tableau$variante)
 levels(tableau$variante) = levels(PER_ff$dsDomEtq)
 
-valIntervalleSur100 = 1.1
+valIntervalleSur100 = 2
 ticks = c(-1 * valIntervalleSur100 * 2, -1 * valIntervalleSur100, 0,
           valIntervalleSur100, valIntervalleSur100 * 2) %>%
   transf_echelle_sur100_inverse() %>% round(0)
@@ -747,8 +747,8 @@ g = tableau |>
                                `Pr(>|z|)` < .01  ~ "1%",
                                `Pr(>|z|)` < .05  ~ "5%")) |>
   ggplot(aes(x = variante, y = Estimate)) +
-  geom_line(aes(colour = var, group = var)) +
-  geom_point(aes(colour = var, shape = confiance)) +
+#  geom_line(aes(colour = var, group = var)) +
+  geom_point(aes(colour = var, shape = confiance), size=2) +
   geom_hline(aes(yintercept = 0, colour = "PCS804"), linetype = 2) +
   scale_y_continuous(trans = trans_sur100, breaks = ticks,
                      labels = transf_echelle_sur100_lab(ticks)) +
@@ -761,10 +761,10 @@ g = tableau |>
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   xlab("Variante du modèle, restreint aux résident⋅es\nde chaque classe de densité") +
   ylab("Coefficient (probabilité d'un recours à l'automobile\npar rapport aux individus de PCS intermédiaire)") +
-  labs(title = ml("Effet de la catégorie socioprofessionnelle sur des",
-                  "modèles logit stratifiés par classe de densité",
-                  "du lieu de résidence"),
-       caption = src_fig(PER_ff))
+  labs(title = ml("Coefficients associés aux catégories socioprofessionnelles",
+                  "dans des modèles logit portant sur l'usage de la voiture,",
+                  "stratifiés par densité du secteur de résidence"),
+       caption = src_fig(emp=F))
 
 sortie("Modes/Modèles logit - voiture, facteur CSP selon résid")
   print(g)
@@ -2103,6 +2103,28 @@ sortie("Modes/Question Tco Vs Auto")
   print(fig)
 off()
 
+# Variante de contrôle : étudiant⋅es
+OPI %>%
+  filter(Activ %in% c("22"), !is.na(polTspUrb_plusTco), Age<30) %>%
+  mutate(Age10 = etqAge(Age, pas = 10, min = 16, max = 85), Genre = etqGenre(Genre)) %>%
+  mutate(Coeff = CoeffOpi) %>%
+  pivot_wider(names_from = polTspUrb_plusTco, values_from = CoeffOpi, names_prefix = "réponse") %>%
+  group_by(Genre,Age10) %>% summarize(across(starts_with("réponse"), sum, na.rm=T), n = sum(Coeff, na.rm=T)) %>%
+  mutate(across(starts_with("réponse"), ~./n*100)) %>%
+  pivot_longer(cols = starts_with("réponse"), names_to = "réponse", values_to = "pop") %>%
+  mutate(réponse = factor(réponse, levels = rev(sort(unique(réponse))))) %>%
+  mutate(réponse = plyr::revalue(réponse, c("réponse1" = "d'accord",
+                                            "réponse2" = "pas d'accord",
+                                            "réponse3" = "sans opinion"))) %>%
+  ggplot(aes(x = Age10, y=pop)) + geom_col(aes(fill = réponse)) +
+  scale_fill_manual(values = c("grey", "orange", "lightgreen")) +
+  labs(title=ml("Réponses à la question",
+                "« Il faut continuer à développer les transports en commun",
+                "même si on est obligé pour cela de gêner les automobilistes »"),
+       subtitle = "Selon l'âge",
+       caption=src_fig(bu=T, emp=F)) + xlab(NULL) + ylab("Part pop. enquêtée (%)") +
+  theme_bw() + theme(legend.position = "bottom") + coord_flip() + facet_wrap(~Genre)
+
 
 OPI %>%
   filter(Activ %in% c("10", "11", "31"), !is.na(polTspUrb_plusTco), Age<70) %>%
@@ -3335,3 +3357,145 @@ off()
 #   select(ModeP, Motif, nb) |>
 #   pivot_wider(names_from = "Motif", values_from = "nb") |>
 #   hist()
+
+
+# Cartes ====
+
+# Carte nationale du recours au TC
+# - par département (EMP comprise)
+# - par AAV
+# - au sein de 4 AAV de différentes classes discrétisées
+
+source("START.R") ; gc()
+initMémoire(BasesCharger = "PER")
+
+rapport("Carte du recours modal, France")
+PER_ff = init_PER_ff(PER)
+
+load("Data/shp_COM.rds") ; load("Data/shp_ZF.rds")
+tab_aav = centroidesAAV()
+remove(shp_COM, shp_ZF)
+load("Data/fdCarte.rds")
+
+dep = PER_ff |>
+  pivot_wider(names_from = "modes_tc", names_prefix = "modes_tc_", values_from = "CoeffRecEnq") |>
+  select(uid_PER, Com, modes_tc_non, modes_tc_oui) |>
+  mutate(dep = ifelse(substr(Com, 1, 2) != "97", substr(Com, 1, 2), substr(Com, 1, 3))) |>
+  group_by(dep) |>
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm=T)), n = n()) |>
+  filter(n > 100) |>
+  mutate(pTc = modes_tc_oui / (modes_tc_non + modes_tc_oui))
+
+dep$pTc = discretisation(dep$pTc*100, verb = T)
+
+g1 = viz_France(base = dep, champRel = "pTc", echelleRel = scale_fill_brewer(palette = "Oranges", na.value = "ghostwhite",
+                                                                            name = "Part de\ntravailleur⋅ses\nutilisant les\nTC (%)"))
+aav = PER_ff |>
+  pivot_wider(names_from = "modes_tc", names_prefix = "modes_tc_", values_from = "CoeffRecEnq") |>
+  select(uid_PER, ZF, modes_tc_non, modes_tc_oui) |>
+  left_join(select(tab_aav, ZF, AAV2020), by="ZF") |>
+  group_by(AAV2020) |>
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm=T)), n = n()) |>
+  filter(n > 100) |>
+  mutate(pTc = modes_tc_oui / (modes_tc_non + modes_tc_oui))
+
+aav$pTc = discretisation(aav$pTc*100, verb = T)
+
+g2 = viz_France(base = aav, methode = "aav", champRel = "pTc",
+               echelleRel = scale_fill_brewer(palette = "YlOrBr",
+                                              na.value = "ghostwhite",
+                                              name = "Part de\ntravailleur⋅ses\nutilisant les\nTC (%)"))
+
+gg = plot_grid(g1 + labs(subtitle = "Par département"),
+               g2 + labs(subtitle = "Par aire d'attraction des villes (2020)"),
+               nrow = 2)
+
+gg = viz_Titre(gg, "Recours aux T.C. parmi les travailleur⋅ses en France\n(durant le jour d'enquête)")
+
+sortie("Modes/Carte France TC", taille = "page", portrait = T)
+  print(gg)
+off()
+
+rapport("Carte du recours au vélo, France")
+PER_ff = init_PER_ff(PER)
+
+dep = PER_ff |>
+  pivot_wider(names_from = "modes_vélo", names_prefix = "modes_vélo_", values_from = "CoeffRecEnq") |>
+  select(uid_PER, Com, modes_vélo_non, modes_vélo_oui) |>
+  mutate(dep = ifelse(substr(Com, 1, 2) != "97", substr(Com, 1, 2), substr(Com, 1, 3))) |>
+  group_by(dep) |>
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm=T)), n = n()) |>
+  filter(n > 100) |>
+  mutate(pVel = modes_vélo_oui / (modes_vélo_non + modes_vélo_oui))
+
+dep$pVel = discretisation(dep$pVel*100, verb = T)
+
+g1 = viz_France(base = dep, champRel = "pVel", echelleRel = scale_fill_brewer(palette = "BuGn", na.value = "ghostwhite",
+                                                                             name = "Part de\ntravailleur⋅ses\nutilisant\nle vélo (%)"))
+aav = PER_ff |>
+  pivot_wider(names_from = "modes_vélo", names_prefix = "modes_vélo_", values_from = "CoeffRecEnq") |>
+  select(uid_PER, ZF, modes_vélo_non, modes_vélo_oui) |>
+  left_join(select(tab_aav, ZF, AAV2020), by="ZF") |>
+  group_by(AAV2020) |>
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm=T)), n = n()) |>
+  filter(n > 100) |>
+  mutate(pVel = modes_vélo_oui / (modes_vélo_non + modes_vélo_oui))
+
+aav$pVel = discretisation(aav$pVel*100, verb = T)
+
+g2 = viz_France(base = aav, methode = "aav", champRel = "pVel",
+                echelleRel = scale_fill_brewer(palette = "BuGn",
+                                               na.value = "ghostwhite",
+                                               name = "Part de\ntravailleur⋅ses\nutilisant\nle vélo (%)"))
+
+gg = plot_grid(g1 + labs(subtitle = "Par département"),
+               g2 + labs(subtitle = "Par aire d'attraction des villes (2020)"),
+               nrow = 2)
+
+gg = viz_Titre(gg, "Recours au vélo parmi les travailleur⋅ses en France\n(durant le jour d'enquête)")
+
+sortie("Modes/Carte France Vélo", taille = "page", portrait = T)
+print(gg)
+off()
+
+rapport("Carte du recours à l'auto, France")
+PER_ff = init_PER_ff(PER)
+
+dep = PER_ff |>
+  pivot_wider(names_from = "modes_voiture", names_prefix = "modes_voiture_", values_from = "CoeffRecEnq") |>
+  select(uid_PER, Com, modes_voiture_non, modes_voiture_oui) |>
+  mutate(dep = ifelse(substr(Com, 1, 2) != "97", substr(Com, 1, 2), substr(Com, 1, 3))) |>
+  group_by(dep) |>
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm=T)), n = n()) |>
+  filter(n > 100) |>
+  mutate(pVoi = modes_voiture_oui / (modes_voiture_non + modes_voiture_oui))
+
+dep$pVoi = discretisation(dep$pVoi*100, verb = T)
+
+g1 = viz_France(base = dep, champRel = "pVoi", echelleRel = scale_fill_brewer(palette = "BuPu", na.value = "ghostwhite",
+                                                                              name = "Part de\ntravailleur⋅ses\nutilisant\nla voiture (%)"))
+aav = PER_ff |>
+  pivot_wider(names_from = "modes_voiture", names_prefix = "modes_voiture_", values_from = "CoeffRecEnq") |>
+  select(uid_PER, ZF, modes_voiture_non, modes_voiture_oui) |>
+  left_join(select(tab_aav, ZF, AAV2020), by="ZF") |>
+  group_by(AAV2020) |>
+  summarise(across(where(is.numeric), \(x) sum(x, na.rm=T)), n = n()) |>
+  filter(n > 100) |>
+  mutate(pVoi = modes_voiture_oui / (modes_voiture_non + modes_voiture_oui))
+
+aav$pVoi = discretisation(aav$pVoi*100, verb = T)
+
+g2 = viz_France(base = aav, methode = "aav", champRel = "pVoi",
+                echelleRel = scale_fill_brewer(palette = "Purples",
+                                               na.value = "ghostwhite",
+                                               name = "Part de\ntravailleur⋅ses\nutilisant\nle vélo (%)"))
+
+gg = plot_grid(g1 + labs(subtitle = "Par département"),
+               g2 + labs(subtitle = "Par aire d'attraction des villes (2020)"),
+               nrow = 2)
+
+gg = viz_Titre(gg, "Recours à la voiture parmi les travailleur⋅ses en France\n(durant le jour d'enquête)")
+
+sortie("Modes/Carte France Voiture", taille = "page", portrait = T)
+print(gg)
+off()

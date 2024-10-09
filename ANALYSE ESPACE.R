@@ -53,7 +53,7 @@ cartoHydro = function(g, etendue, carte = fdCarte, proj = 2154)
     return(g)
 } #avant c'était lightblue
 
-cartoAxes = function(g, etendue, carte = fdCarte, proj = 2154)
+cartoAxes = function(g, etendue, carte = fdCarte, proj = 2154, det = T)
 {
     ra = carte$shpRail %>%
         st_transform(crs = proj) %>%
@@ -61,23 +61,34 @@ cartoAxes = function(g, etendue, carte = fdCarte, proj = 2154)
         st_simplify(dTolerance = 10000) %>%
         mutate(type = "voies ferrées") %>%
         select(type, geometry)
-    r2 = carte$shpRoutes2 %>%
+    if (det)
+    {
+      r2 = carte$shpRoutes2 %>%
         st_transform(crs = proj) %>%
         st_intersection(etendue) %>%
         st_simplify(dTolerance = 10000) %>%
         mutate(type = "routes secondaires") %>%
         select(type, geometry)
+    }
     r1 = carte$shpRoutes1 %>%
         st_transform(crs = proj) %>%
         st_intersection(etendue) %>%
         st_simplify(dTolerance = 10000) %>%
         mutate(type = "routes majeures") %>%
         select(type, geometry)
-    axes = rbind(ra, r2, r1)
+    
+    if (det)
+    {
+      axes = rbind(ra, r2, r1)
+      couleurs = c("maroon", "gray40", "rosybrown4")
+    } else {
+      axes = rbind(ra, r1)
+      couleurs = c("maroon", "rosybrown4")
+    }
     
     g = g +
         geom_sf(data = axes, aes(color = type), alpha=1, linewidth = .2, key_glyph = "path") +
-        scale_color_manual(values = c("maroon", "gray40", "purple"),
+        scale_color_manual(values = couleurs,
                            name = "Axes de transport")
     
     return(g)
@@ -90,6 +101,8 @@ cartoLib = function(g, etendue, detail = 5, carte = fdCarte, proj = 2154, overri
         # override manuel de etendue à cause de cette andouille de R SANS TYPES FIXES
         etendue = st_sfc(etendue, crs = proj)
     }
+  
+  etendue = st_transform(etendue, crs = proj)
     
     # Etiquetage avec un carroyage : but = afficher le lieu de peuplement le plus big de
     # chaque carreau
@@ -1878,62 +1891,108 @@ map_vizJour = function(id, verb=F)
 
 
 
-viz_France = function(baseDep, champAbs = NULL, champRel = NULL,
-                      echelleAbs = NULL, echelleRel = NULL)
+viz_France = function(base, champAbs = NULL, champRel = NULL,
+                      echelleAbs = NULL, echelleRel = NULL, methode = "dep")
 {
   # On renomme le champ à représenter
   if (!is.null(champAbs))
   {
-    colnames(baseDep)[colnames(baseDep) == champAbs] = "champAbs"
+    colnames(base)[colnames(base) == champAbs] = "champAbs"
   }
   if (!is.null(champRel))
   {
-    colnames(baseDep)[colnames(baseDep) == champRel] = "champRel"
+    colnames(base)[colnames(base) == champRel] = "champRel"
   }
   
-  # On récupère les communes
-  coms = read_sf("Sources/Mailles/communes-20210101.shp")
-  coms$dep = substr(coms$insee, 1, 2)
-  coms$dep = ifelse(coms$dep == "97", substr(coms$insee, 1, 3), coms$dep)
-  
   # On récupère la population en 2014 si nécessaire
-  coms_pop = read_delim("Sources/base-cc-evol-struct-pop-2020.CSV", delim = ";", locale = locale(encoding = "Windows-1252"))
-  coms_pop = select(coms_pop, CODGEO, P14_POP)
-  coms = left_join(coms, coms_pop, by = c("insee" = "CODGEO")) |> st_transform(crs = 2154)
+  # coms_pop = read_delim("Sources/base-cc-evol-struct-pop-2020.CSV", delim = ";", locale = locale(encoding = "Windows-1252"))
+  # coms_pop = select(coms_pop, CODGEO, P14_POP)
+  # coms = left_join(coms, coms_pop, by = c("insee" = "CODGEO")) |> st_transform(crs = 2154)
   
-  # On agrège pour faire des départements (simplifiés)
-  deps = coms |> st_simplify(preserveTopology = T, dTolerance = 100) |>
-    st_buffer(dist = 100) |>
-    group_by(dep) |> summarise(P14_POP = sum(P14_POP, na.rm=T)) |> st_transform(crs = 3857)
+  if (methode == "dep")
+  {
+    # On agrège pour faire des départements (simplifiés)
+    # Opération très longue, à sauter si possible
+    if (file.exists("Data/deps.rds"))
+    {
+      load("Data/deps.rds")
+    } else {
+      coms = read_sf("Sources/Mailles/communes-20210101.shp")
+      coms$dep = substr(coms$insee, 1, 2)
+      coms$dep = ifelse(coms$dep == "97", substr(coms$insee, 1, 3), coms$dep)
+      
+      deps = coms |> st_simplify(preserveTopology = T, dTolerance = 100) |>
+        st_buffer(dist = 100) |>
+        group_by(dep) |> summarise() |> st_transform(crs = 3857)
+      
+      save(deps, file = "Data/deps.rds")
+      
+      remove(coms)
+    }
+    
+    # On joint à la base fournie
+    deps = left_join(deps, base, by = "dep")
+    
+    base = deps ; remove(deps)
+  }
   
-  # On joint à la base fournie
-  deps = left_join(deps, baseDep, by = "dep")
+  if (methode == "aav")
+  {
+    aavs = read_sf("Sources/Fond Carte/zMetro.shp")
+    aavs = rbind(aavs, read_sf("Sources/Fond Carte/zDOM.shp"))
+    aavs = st_transform(aavs, crs = 3857)
+    aavs = aavs %>% filter(AAV20 != "000") %>% group_by(AAV20) %>%
+      summarise(LIBAAV2 = first(LIBAAV2), DEP = mode(DEP)) %>%
+      rename(LIBAAV2020 = LIBAAV2, AAV2020 = AAV20)
+    
+    base = left_join(aavs, base, by = "AAV2020")
+    print(head(base))
+    
+    # Les outremers sont dans l'océan... j'aime pas... mieux vaut les retirer
+    base = filter(base, !DEP %in% c(971:976))
+  }
   
   if (!is.null(champAbs))
   {
     # On crée des centroïdes pour le champ absolu (symboles prop)
-    dep_points = st_centroid(deps)
-    dep_points = filter(dep_points, !is.na(rapport))
+    base_points = st_centroid(base)
+    base_points = filter(base_points, !is.na(rapport))
   }
   
   # On initialise le graphique
-  g = ggplot(data = deps)
+  g = ggplot(data = base)
+  
+  # Un fond continental
+  gB = read_sf("Sources/Fond Carte/geoBoundariesCGAZ_ADM0.shp")
   
   # S'il n'y a pas de variable relative, on met un fond gris ; sinon,
   # on met un fond avec un fill sur la variable relative
   if (is.null(champRel))
   {
-    g = g + geom_sf(fill = "grey95", colour = "grey80")
+    g = g +
+      geom_sf(data = gB, fill = "seashell", colour = "transparent") +
+      geom_sf(fill = "grey95", colour = "grey80")
   }
   else
   {
-    g = g + geom_sf(aes(fill = champRel), colour = "grey80")
+    if (is.null(champAbs))
+    {
+      g = g +
+        geom_sf(data = gB, fill = "seashell", colour = "transparent") +
+        geom_sf(aes(fill = champRel), colour = "grey80")
+    } else {
+      print(head(base_points))
+      g = g +
+        geom_sf(data = gB, fill = "seashell", colour = "transparent") +
+        geom_sf(fill = "ghostwhite", colour="grey80") +
+        geom_sf(data = base_points, aes(colour = champRel, size = champAbs))
+    }
   }
   
   # S'il y a une variable absolue, on ajoute des symboles props
-  if (!is.null(champAbs))
+  if (!is.null(champAbs) & is.null(champRel))
   {
-    g = g + geom_sf(data = dep_points, aes(size = champAbs),
+    g = g + geom_sf(data = base_points, aes(size = champAbs),
                     alpha = .8, fill = "grey30")
   }
   
@@ -1941,7 +2000,7 @@ viz_France = function(baseDep, champAbs = NULL, champRel = NULL,
   g = g + coord_sf(xlim = c(-550000,1100000), ylim = c(5000000,6600000))
   
   # On retire les axes
-  g = g + ggRetirerAxeX + ggRetirerAxeY
+  g = g + theme(axis.text = element_blank(), axis.title = element_blank(), axis.ticks = element_blank())
   
   
   # Échelles pour les champs
@@ -1953,67 +2012,82 @@ viz_France = function(baseDep, champAbs = NULL, champRel = NULL,
   {
     g = g + echelleRel
   }
-  
-  # On crée des encarts sur les 3 outremers
-  # → Bbox de la Guyane
-  bbox973 = st_bbox(filter(deps, dep == "973"))
-  
-  # → Centre des bboxes de Martinique et Réunion
-  ctr972 = st_centroid(filter(deps, dep == "972")) |> st_bbox()
-  ctr974 = st_centroid(filter(deps, dep == "974")) |> st_bbox()
-  
-  # → Intervalles entre le centre bbox Guyane et ses bords
-  xinterv = as.double(bbox973$xmax - bbox973$xmin)
-  yinterv = as.double(bbox973$ymax - bbox973$ymin)
-  
-  # → Calcul de bboxes de même échelle pour Martinique et Réunion
-  pts972 = data.frame(
-    lon = c(ctr972$xmax - (xinterv / 2), ctr972$xmax + (xinterv / 2), ctr972$xmax + (xinterv / 2), ctr972$xmax - (xinterv / 2)) |> as.double(),
-    lat = c(ctr972$ymax + (yinterv / 2), ctr972$ymax + (yinterv / 2), ctr972$ymax - (yinterv / 2), ctr972$ymax - (yinterv / 2)) |> as.double()
-  )
-  box972 = st_as_sf(pts972, coords = c("lon", "lat"), crs = st_crs(bbox973)) |>
-    summarise(geometry = st_combine(geometry)) |> st_cast("POLYGON") 
-  bbox972 = st_bbox(box972)
-  
-  pts974 = data.frame(
-    lon = c(ctr974$xmax - (xinterv / 2), ctr974$xmax + (xinterv / 2), ctr974$xmax + (xinterv / 2), ctr974$xmax - (xinterv / 2)) |> as.double(),
-    lat = c(ctr974$ymax + (yinterv / 2), ctr974$ymax + (yinterv / 2), ctr974$ymax - (yinterv / 2), ctr974$ymax - (yinterv / 2)) |> as.double()
-  )
-  box974 = st_as_sf(pts974, coords = c("lon", "lat"), crs = st_crs(bbox973)) |>
-    summarise(geometry = st_combine(geometry)) |> st_cast("POLYGON")
-  bbox974 = st_bbox(box974)
-  
-  # → Encarts pour les 3 outremers
-  g972 = g + coord_sf(xlim = c(bbox972$xmin, bbox972$xmax), ylim = c(bbox972$ymin, bbox972$ymax))
-  g973 = g + coord_sf(xlim = c(bbox973$xmin, bbox973$xmax), ylim = c(bbox973$ymin, bbox973$ymax))
-  g974 = g + coord_sf(xlim = c(bbox974$xmin, bbox974$xmax), ylim = c(bbox974$ymin, bbox974$ymax))
-  
-  # → Pas d'axes pour ces encarts
-  g972 = g972 + theme(axis.text = element_blank(), axis.ticks = element_blank())
-  g973 = g973 + theme(axis.text = element_blank(), axis.ticks = element_blank())
-  g974 = g974 + theme(axis.text = element_blank(), axis.ticks = element_blank())
-  
-  # → Création d'un carton de côté
-  gOM = cowplot::plot_grid(g972 + labs(subtitle = "Martinique") +
-                             theme(line = element_blank(),
-                                   legend.position = "none", plot.subtitle = element_text(hjust=.5)),
-                           g973 + labs(subtitle = "Guyane") +
-                             theme(line = element_blank(), 
-                                   legend.position = "none", plot.subtitle = element_text(hjust=.5)),
-                           g974 + labs(subtitle = "Réunion") +
-                             theme(line = element_blank(),
-                                   legend.position = "none", plot.subtitle = element_text(hjust=.5)),
-                           nrow = 3, rel_heights=c(1,1,1))
+
+  if (methode == "dep")
+  {
+    # On crée des encarts sur les 3 outremers
+    # → Bbox de la Guyane
+    bbox973 = st_bbox(filter(base, dep == "973"))
+    
+    # → Centre des bboxes de Martinique et Réunion
+    ctr972 = st_centroid(filter(base, dep == "972")) |> st_bbox()
+    ctr974 = st_centroid(filter(base, dep == "974")) |> st_bbox()
+    
+    # → Intervalles entre le centre bbox Guyane et ses bords
+    xinterv = as.double(bbox973$xmax - bbox973$xmin)
+    yinterv = as.double(bbox973$ymax - bbox973$ymin)
+    
+    # → Calcul de bboxes de même échelle pour Martinique et Réunion
+    pts972 = data.frame(
+      lon = c(ctr972$xmax - (xinterv / 2), ctr972$xmax + (xinterv / 2), ctr972$xmax + (xinterv / 2), ctr972$xmax - (xinterv / 2)) |> as.double(),
+      lat = c(ctr972$ymax + (yinterv / 2), ctr972$ymax + (yinterv / 2), ctr972$ymax - (yinterv / 2), ctr972$ymax - (yinterv / 2)) |> as.double()
+    )
+    box972 = st_as_sf(pts972, coords = c("lon", "lat"), crs = st_crs(bbox973)) |>
+      summarise(geometry = st_combine(geometry)) |> st_cast("POLYGON") 
+    bbox972 = st_bbox(box972)
+    
+    pts974 = data.frame(
+      lon = c(ctr974$xmax - (xinterv / 2), ctr974$xmax + (xinterv / 2), ctr974$xmax + (xinterv / 2), ctr974$xmax - (xinterv / 2)) |> as.double(),
+      lat = c(ctr974$ymax + (yinterv / 2), ctr974$ymax + (yinterv / 2), ctr974$ymax - (yinterv / 2), ctr974$ymax - (yinterv / 2)) |> as.double()
+    )
+    box974 = st_as_sf(pts974, coords = c("lon", "lat"), crs = st_crs(bbox973)) |>
+      summarise(geometry = st_combine(geometry)) |> st_cast("POLYGON")
+    bbox974 = st_bbox(box974)
+    
+    # → Encarts pour les 3 outremers
+    g972 = g + coord_sf(xlim = c(bbox972$xmin, bbox972$xmax), ylim = c(bbox972$ymin, bbox972$ymax))
+    g973 = g + coord_sf(xlim = c(bbox973$xmin, bbox973$xmax), ylim = c(bbox973$ymin, bbox973$ymax))
+    g974 = g + coord_sf(xlim = c(bbox974$xmin, bbox974$xmax), ylim = c(bbox974$ymin, bbox974$ymax))
+    
+    # → Pas d'axes pour ces encarts
+    g972 = g972 + theme(axis.text = element_blank(), axis.ticks = element_blank())
+    g973 = g973 + theme(axis.text = element_blank(), axis.ticks = element_blank())
+    g974 = g974 + theme(axis.text = element_blank(), axis.ticks = element_blank())
+    
+    # → Création d'un carton de côté
+    gOM = cowplot::plot_grid(g972 + labs(subtitle = "Martinique") +
+                               theme(line = element_blank(),
+                                     legend.position = "none", plot.subtitle = element_text(hjust=.5)),
+                             g973 + labs(subtitle = "Guyane") +
+                               theme(line = element_blank(), 
+                                     legend.position = "none", plot.subtitle = element_text(hjust=.5)),
+                             g974 + labs(subtitle = "Réunion") +
+                               theme(line = element_blank(),
+                                     legend.position = "none", plot.subtitle = element_text(hjust=.5)),
+                             nrow = 3, rel_heights=c(1,1,1))
+  }
   
   # Échelle
   g = g + ggspatial::annotation_scale(location="bl", bar_cols = c("gray60", "gray95"),
                                       line_col = "gray70", height = unit(.1, "cm"))
   
-  # On colle l'encart outremers et l'encart hexa
-  gg = cowplot::plot_grid(gOM, g, nrow = 1, rel_widths = c(1,5))
+  if (methode == "aav")
+  {
+    g = cartoLib(g, etendue = aavs, proj = st_crs(base))
+  }
+  
+  if (methode == "dep")
+  {
+    # On colle l'encart outremers et l'encart hexa
+    gg = cowplot::plot_grid(gOM, g, nrow = 1, rel_widths = c(1,5))
+  } else {
+    gg = g
+  }
+
+  siEmp = methode == "dep"
   
   # Pied de page
-  gg = viz_Pied(gg, src_fig(bu = T, emp = T, carto = T, date = moisEnCours()))
+  gg = viz_Pied(gg, src_fig(bu = T, emp = siEmp, carto = T, gB= T, date = moisEnCours()))
   
   return(gg)
 }

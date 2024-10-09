@@ -11,12 +11,51 @@ PER_Dep = PER |>
                          substr(Com, 1, 2) != "97" ~ substr(Com, 1, 2))) |>
   group_by(dep) |> summarise(pop = sum(CoeffRecEnq), n = n())
 
+coms_pop = read_delim("Sources/base-cc-evol-struct-pop-2020.CSV", delim = ";",
+                      locale = locale(encoding = "Windows-1252"))
+coms_pop = select(coms_pop, CODGEO, P14_POP)
+
+deps_pop = coms_pop |>
+  mutate(dep = case_when(substr(CODGEO, 1, 2) == "97" ~ substr(CODGEO, 1, 3),
+                         substr(CODGEO, 1, 2) != "97" ~ substr(CODGEO, 1, 2))) |>
+  group_by(dep) |> summarise(P14_POP = sum(P14_POP, na.rm=T))
+
+PER_Dep = left_join(PER_Dep, deps_pop, by = "dep")
+
+PER_Dep = PER_Dep |> mutate(pP14 = P14_POP / sum(P14_POP, na.rm=T),
+                      pPop = n / sum(n, na.rm=T),
+                      rapport = pPop/pP14,
+                      rapportVecto = case_when(rapport < .1 ~ "Dépt. très peu représenté (<10%)",
+                                               rapport < .8 ~ "Dépt. sous-représenté (<80%)",
+                                               rapport >= .8 & rapport <= 1.2 ~ "Représentation équivalente",
+                                               rapport > 1.2 ~ "Dépt. sur-représenté (>120%)"))
+
+echelleCol =  scale_colour_manual(breaks = c("Dépt. très peu représenté (<10%)",
+                                             "Dépt. sous-représenté (<80%)",
+                                             "Représentation équivalente",
+                                             "Dépt. sur-représenté (>120%)"),
+                                  values = c("slateblue",
+                                             "cyan2",
+                                             "green",
+                                             "orange"),
+                                  name = "Part des enquêté⋅es par rapport\nà la part de la population")
+
+g = viz_France(base = PER_Dep,
+           champAbs = "n",
+           champRel = "rapportVecto",
+           echelleAbs = scale_size(breaks = c(100, 1000, 10000, 40000),
+                                   name = "Nombre enquêté⋅es\n(base unifiée Cerema + EMP)"),
+           echelleRel = echelleCol)
+
+sortie("Enquêté⋅es par département")
+  print(viz_Titre(g, "Répartition des enquêté⋅es par département"))
+off()
+
 coms = read_sf("Sources/Mailles/communes-20210101.shp")
 coms$dep = substr(coms$insee, 1, 2)
 coms$dep = ifelse(coms$dep == "97", substr(coms$insee, 1, 3), coms$dep)
 
-coms_pop = read_delim("Sources/base-cc-evol-struct-pop-2020.CSV", delim = ";", locale = locale(encoding = "Windows-1252"))
-coms_pop = select(coms_pop, CODGEO, P14_POP)
+
 
 coms = left_join(coms, coms_pop, by = c("insee" = "CODGEO")) |> st_transform(crs = 2154)
 
@@ -26,13 +65,7 @@ deps = coms |> st_simplify(preserveTopology = T, dTolerance = 100) |>
 
 deps = left_join(deps, PER_Dep, by = "dep")
 
-deps = deps |> mutate(pP14 = P14_POP / sum(P14_POP),
-                      pPop = n / sum(n, na.rm=T),
-                      rapport = pPop/pP14,
-                      rapportVecto = case_when(rapport < .1 ~ "Dépt. très peu représenté (<10%)",
-                                               rapport < .8 ~ "Dépt. sous-représenté (<80%)",
-                                               rapport >= .8 & rapport <= 1.2 ~ "Représentation équivalente",
-                                               rapport > 1.2 ~ "Dépt. sur-représenté (>120%)"))
+
 
 reg_points = deps |> maillageDepVersReg(champDep = "dep") |> st_centroid()
 
@@ -44,17 +77,9 @@ deps_hex = deps |> group_by(dep) |> summarise()
 g=ggplot(data = dep_points) +
   geom_sf(data = deps_hex, fill = "grey95", colour = "grey80") +
   geom_sf(aes(size = n, colour = rapportVecto), alpha=.8) +
-  scale_size(breaks = c(100, 1000, 10000, 40000), name = "Nombre enquêté⋅es\n(base unifiée Cerema + EMP)")
+  
 
-echelleCol =  scale_colour_manual(breaks = c("Dépt. très peu représenté (<10%)",
-                                             "Dépt. sous-représenté (<80%)",
-                                             "Représentation équivalente",
-                                             "Dépt. sur-représenté (>120%)"),
-                                  values = c("slateblue",
-                                             "cyan2",
-                                             "green",
-                                             "orange"),
-                                  name = "Part des enquêté⋅es par rapport\nà la part de la population")
+
 
 g = g + echelleCol
 
@@ -144,6 +169,31 @@ trjOk = DEP |>
                                  n_tout  = sum(poids, na.rm=T)) |>
   mutate(pTrjOk = n_trjOk/n_tout)
 
+# Part des PCS ==================================================================
+
+rec14 = read_delim("Sources/base-cc-evol-struct-pop-2020.CSV", delim = ";")
+
+# On va structurer pour obtenir la part des PCS
+
+rec14 |>
+  select("CODGEO", paste0("C14_POP15P_CS", c(1:6))) |>
+  pivot_longer(cols = paste0("C14_POP15P_CS", c(1:6)),
+               names_to = "PCS8", values_to = "N") |>
+  group_by(PCS8) |> summarise(N = sum(N, na.rm=T)) |>
+  mutate(p = N/sum(N))
+
+PER |>
+  filter(Age>15) |> filter(PCS8 %in% paste0("0", c(1:6))) |>
+  filter(Activ != "32") |>
+  group_by(PCS8) |> summarise(n = n()) |>
+  mutate(p = n / sum(n))
+
+PER |>
+  filter(!is.na(CoeffRecEnq)) |>
+  filter(Age>15) |> filter(PCS8 %in% paste0("0", c(1:6))) |>
+  filter(Activ != "32") |>
+  group_by(PCS8) |> summarise(n = sum(CoeffRecEnq)) |>
+  mutate(p = n / sum(n))
 
 # Caractéristiques des zones ====================================================
 
@@ -306,13 +356,14 @@ s44zf$terrain = ifelse(s44zf$CODE_ZF %in% codesZF, "Terrain", "Autres zones")
 
 g = ggplot(s44) +
   geom_sf(data = s44zf, aes(fill = terrain, colour = "ZF")) +
-  scale_fill_manual(values = c("#f1fad4", "gold"),
+  scale_fill_manual(values = c("white", "gold"),
                     name = "Terrain (2022)",
                     labels = c("ZF non enquêtées",
                                "ZF enquêtées lors\ndu terrain")) 
 g = cartoHydro(g, etendue = bbox) +
+  geom_sf(data = s44zf, fill="transparent", colour = "grey75") +
   geom_sf(aes(colour = "ST"), fill = NA) +
-  scale_colour_manual(values = c("grey35", "grey65"),
+  scale_colour_manual(values = c("grey35", "grey75"),
                       name = "Secteurs et zones",
                       labels = c("Secteurs de\ntirage",
                                  "Zones fines"))

@@ -1395,10 +1395,14 @@ shp_Dep = read_sf("Sources/Fond Carte/DEPARTEMENT.shp") %>%
   left_join(baseDep, by=c("INSEE_DEP" = "Dep")) %>%
   st_simplify(preserveTopology = T, dTolerance = 1000)
 
-etendue = summarise(shp_Dep)
+shp_Dep = shp_Dep |> st_transform(3857)
+etendue = summarise(st_make_valid(shp_Dep))
 load("Data/fdCarte.rds")
 
+gB = read_sf("Sources/Fond Carte/geoBoundariesCGAZ_ADM0.shp")
+
 g = ggplot(data = shp_Dep) +
+  geom_sf(data = gB, fill = "seashell", colour="transparent") +
   geom_sf(aes(fill = DuTvlMed), color = "white", size=.25, ) +
   labs(title = "Durée de travail médiane par département (Hexagone)",
        caption = src_fig(bu = F, emp = T, carto=T)) +
@@ -1406,7 +1410,8 @@ g = ggplot(data = shp_Dep) +
                      name = "durée de travail\nmédiane (heures)", na.value = "grey") +
   geom_sf(data = st_point_on_surface(shp_Dep), aes(size = n),
           shape = 21, color = "gray20", alpha = .4) +
-  scale_size(name = "échantillon\n(nb. enquêté·es)")
+  scale_size(name = "échantillon\n(nb. enquêté·es)") +
+  coord_sf(xlim = c(-550000,1100000), ylim = c(5000000,6600000))
 g = cartoLib(g, etendue, detail = 4)
 g = cartoFinish(g, etendue)
 
@@ -1583,6 +1588,13 @@ print(gs)
 off()
 
 # ~ Volumes horaires comparés 2 à 2 ====
+
+source("START.R")
+initMémoire()
+load("Data/PER.rds")
+PER_ff = init_PER_ff(PER)
+load("Data/ACT.rds")
+load("Data/shp_ZT.rds")
 
 ## Rapport PCS3/PCS5
 
@@ -2006,10 +2018,10 @@ proceed = function(uid, shp, sousTitre = NULL) {
     labs(title = "Rapport entre la durée de présence au travail des hommes et femmes\nau sein des couples hétérosexuels en emploi",
          subtitle = ifelse(is.null(sousTitre), z_Nomenclature[z_Nomenclature$uid_ENQ == uid,]$Libelle_Long, sousTitre),
          caption = src_fig(base = filter(shp, uid_ENQ == uid), carto=T))
-  g = cartoHydro(g, etendue = etendue, proj = st_crs(shp)) +
-    geom_sf(data = st_point_on_surface(b), aes(size = du),
-            shape=21, color = "gray20", alpha=.5) +
-    scale_size(range = c(2,12), name = "heures passées sur\nle lieu de travail\n(total, couples H/F)")
+  g = cartoHydro(g, etendue = etendue, proj = st_crs(shp)) # +
+    # geom_sf(data = st_point_on_surface(b), aes(size = du),
+    #         shape=21, color = "gray20", alpha=.5) +
+    #  scale_size(range = c(2,12), name = "heures passées sur\nle lieu de travail\n(total, couples H/F)")
   g = cartoLib(g, etendue = etendue, detail = 5, overrideEtendue = T)
   g = cartoFinish(g, etendue = etendue)
   return(g)
@@ -2034,11 +2046,10 @@ sortie("Temps/Atlas durée prez travail hommes et femmes", format = "pdf", taill
 print(gs)
 off()
 
-sortie("Temps/Carte rapport hf temps au lieu de travail - bas-rhin")
+sortie("Temps/Carte rapport hf temps au lieu de travail - bas-rhin", taille = "man", h = 12)
 print(gs[[13]])
 off()
-
-sortie("Temps/Carte rapport hf temps au lieu de travail - calvados")
+sortie("Temps/Carte rapport hf temps au lieu de travail - calvados", taille = "man", h = 8.5)
 print(gs[[14]])
 off()
 
@@ -2292,7 +2303,11 @@ gs = lapply(uids, function(uid)
 } )
 
 # Activités dans la journée =====
+source("START.R")
+initMémoire()
 rapport("Analyse des activités", prim = T)
+load("Data/PER.rds")
+PER_ff = init_PER_ff(PER)
 
 # ~ Analyse factorielle activités ====
 
@@ -2325,14 +2340,21 @@ summary(acpActivites)
 
 ade4::s.corcircle(acpActivites$co, xax = 1, yax = 2, fullcircle = T, box=T)
 
-g1 = fviz_pca_var(acpActivites, axes=c(1,2), repel = T) +
+g1 = fviz_pca_var(acpActivites, axes=c(1,2), labelsize=.4, repel = T) +
   labs(title = "ACP : activités hors domicile",
        subtitle = "Axes 1 et 2",
        caption = src_fig(PER_ff))
-g2 = fviz_pca_var(acpActivites, axes=c(1,3), repel = T) +
+g2 = fviz_pca_var(acpActivites, axes=c(1,3), labelsize=.4,  repel = T) +
   labs(title = "ACP : activités hors domicile",
        subtitle = "Axes 1 et 3",
        caption = src_fig(PER_ff))
+
+sortie("Temps/ACP Activités - Cercle 1-2", taille = "man", format="svg", h = 8, l = 8)
+print(g1) + theme_minimal(base_size = 9)
+off()
+sortie("Temps/ACP Activités - Cercle 1-3", taille = "man", format="svg", h = 8, l = 8)
+print(g2) + theme_minimal(base_size = 9)
+off()
 
 g1 = PER_ff |>
   cbind(acpActivites$li) |>
@@ -2358,12 +2380,7 @@ sortie("Temps/ACP Activités - Genre et PCS", format = "svg")
 print(g1)
 off()
 
-sortie("Temps/ACP Activités - Cercle 1-2", taille = "man", h = 8, l = 8)
-  print(g1) + theme_minimal(base_size = 9)
-off()
-sortie("Temps/ACP Activités - Cercle 1-3", taille = "man", h = 8, l = 8)
-  print(g2) + theme_minimal(base_size = 9)
-off()
+
 
 nbs = c("1er", "2e", "3e", "4e")
 etq = paste0(nbs, " quartile")
@@ -2384,7 +2401,7 @@ g1 = PER_ff |>
   xlab("Axe 1") + ylab("Axe 2") +
   labs(title = "PCS et densité secteur de résidence\ndans l'analyse factorielle des temps d'activité",
        subtitle = "Variables supplémentaires",
-       caption = src_fig(PER_ff)) +
+       caption = src_fig(emp=F)) +
   coord_cartesian() +
   scale_shape_manual(values = c(15, 16, 17, 18),
                      labels = niv_PCS8[3:6],

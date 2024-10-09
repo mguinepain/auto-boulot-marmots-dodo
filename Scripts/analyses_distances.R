@@ -35,9 +35,6 @@ PER_f = PER %>%
          Age < 70,
          !is.na(CoeffRecEnq))
 
-PER_ff = densitesZversPER(PER_ff)
-PER_f = densitesZversPER(PER_f)
-
 load("Data/MEN.rds")
 PER_ff = left_join(PER_ff, select(MEN, uid_MEN, MenBebe), by = "uid_MEN")
 remove(MEN)
@@ -2742,10 +2739,20 @@ off()
 
 # Carto simple ====
 
+source("START.R")
+initMémoire(BasesCharger = "PER")
+PER_ff = init_PER_ff(PER)
 load("Data/shp_ZT.rds") ; load("Data/fdCarte.rds")
 load("Data/shp_COM.rds") ; load("Data/shp_ZF.rds")
 ZFs = centroidesAAV()
 remove(shp_ZF)
+
+aavs = read_sf("Sources/Fond Carte/zMetro.shp")
+aavs = rbind(aavs, read_sf("Sources/Fond Carte/zDOM.shp"))
+aavs = st_transform(aavs, crs = 2154)
+aavs = aavs %>% filter(AAV20 != "000") %>% group_by(AAV20) %>%
+  summarise(LIBAAV2 = first(LIBAAV2)) %>%
+  rename(LIBAAV2020 = LIBAAV2)
 
 # On reprend les travaux sur les effets de contexte sur la distance, en simplifiant cette fois. But =
 # réaliser des cartes toutes simples et sans fioritures inutiles.
@@ -2801,7 +2808,7 @@ cartoEnq = function(enq)
     labs(title = z_Nomenclature[z_Nomenclature$uid_ENQ == enq,]$Libelle_Long,
          caption = src_fig(et, carto = T))
   g = cartoHydro(g, et)
-  g = cartoAxes(g, et)
+  g = cartoAxes(g, et, det = F)
   g = cartoLib(g, et)
   g = cartoFinish(g, et)
 }
@@ -2832,7 +2839,7 @@ cartoEnq4 = function(enq)
     labs(title = z_Nomenclature[z_Nomenclature$uid_ENQ == enq,]$Libelle_Long,
          caption = src_fig(et, carto = T)) + facet_wrap(~PCS8)
   g = cartoHydro(g, et)
-  g = cartoAxes(g, et)
+  g = cartoAxes(g, et, det = F)
   g = cartoLib(g, et)
   g = cartoFinish(g, et)
 }
@@ -2860,12 +2867,12 @@ g = shp_ZT %>% left_join(disZT, by="ZT") %>% cartoSchematiser() %>%
   geom_sf(data = aav, aes(linetype = "aire d'attraction\nde Nantes"),
           color = "brown", size=2, fill = NA) +
   scale_shape(name = NULL) + scale_linetype(name = NULL) +
-  scale_fill_brewer(palette = "BuPu", na.value = "grey40",
+  scale_fill_brewer(palette = "BuPu", na.value = "ghostwhite",
                       name = "distance moyenne\n(en km)", guide = "legend") +
   labs(title = z_Nomenclature[z_Nomenclature$uid_ENQ == "LOI2015",]$Libelle_Long,
        caption = src_fig(et, carto = T))
 g = cartoHydro(g, et)
-g = cartoAxes(g, et)
+g = cartoAxes(g, et, det = F)
 g = cartoLib(g, et)
 g = cartoFinish(g, et)
 print(g)
@@ -2888,12 +2895,12 @@ g = shp_ZT %>% left_join(disZT, by="ZT") %>% cartoSchematiser() %>%
   geom_sf(data = cen, aes(shape = "centroïde\nde Lyon")) +
   geom_sf(data = aav, aes(linetype = "aire d'attraction\nde Lyon"), color = "plum", size=1, fill = NA) +
   scale_shape(name = NULL) + scale_linetype(name = NULL) +
-  scale_fill_brewer(palette="BuPu", na.value = "grey40",
+  scale_fill_brewer(palette="BuPu", na.value = "ghostwhite",
                       name = "distance moyenne\n(en km)", guide = "legend") +
   labs(title = z_Nomenclature[z_Nomenclature$uid_ENQ == "LYO2015",]$Libelle_Long,
        caption = src_fig(et, carto = T))
 g = cartoHydro(g, et)
-g = cartoAxes(g, et)
+g = cartoAxes(g, et, det = F)
 g = cartoLib(g, et, detail = 3)
 g = cartoFinish(g, et)
 print(g)
@@ -2918,14 +2925,14 @@ g = shp_ZT %>% left_join(disZT, by="ZT") %>%
   ggplot() + 
   geom_sf(aes(fill = disMoy), color = "gray90", size=.2) +
   geom_sf(data = aav, aes(linetype = "Limites de l'AAV\nparisienne"),
-          color = "grey80", size = .6, fill = NA, key_glyph = "polygon") +
-  scale_fill_brewer(palette="BuPu", na.value = "gray40",
+          color = "black", linewidth=.25, fill = NA, key_glyph = "polygon") +
+  scale_fill_brewer(palette="BuPu", na.value = "ghostwhite",
                       name = "Distance moyenne\n(en km)", guide = "legend") +
-  scale_linetype(name = "Agglomération") +
+  scale_linetype_manual(values = 2, name = "Agglomération") +
   labs(title = "Distance moyenne parcourue par les travailleur·ses de l'aire parisienne",
        subtitle = "En fonction de leur lieu de résidence",
        caption = src_fig(filter(PER, uid_ENQ == "IDF2010")))
-g = cartoAxes(g, et)
+g = cartoAxes(g, et, det = F)
 g = cartoLib(g, et, detail = 4)
 g = cartoFinish(g, et)
 
@@ -2947,15 +2954,15 @@ g = shp_ZT %>% left_join(disZT, by="ZT") %>%
   geom_sf(aes(fill = disMoy), color = "gray90", size=.2) +
   scale_fill_brewer(palette="BuPu",
                       name = "Distance moyenne\n(en km)", guide = "legend",
-                      na.value = "grey40") +
+                      na.value = "ghostwhite") +
   labs(title = "Distance moyenne parcourue par les habitant·es de l'aire bordelaise",
        subtitle = "En fonction de leur lieu de résidence",
        caption = src_fig(filter(PER, uid_ENQ == "BOR2009")))
 g = cartoHydro(g, et) +
   geom_sf(data = aav, aes(linetype = "Limites de l'AAV\nbordelaise (2020)"),
-          color = "slateblue", size = .6, fill = NA, key_glyph = "polygon") +
-  scale_linetype(name = "Agglomération")
-g = cartoAxes(g, et)
+          color = "black", linewidth = .25, fill = NA, key_glyph = "polygon") +
+  scale_linetype_manual(values = 2, name = "Agglomération")
+g = cartoAxes(g, et, det = F)
 g = cartoLib(g, et)
 g = cartoFinish(g, et)
 
@@ -2977,7 +2984,7 @@ g = shp_ZT %>% left_join(disZT, by="ZT") %>%
   geom_sf(aes(fill = disMoy), color = "gray90", size=.2) +
   scale_fill_brewer(palette="BuPu",
                       name = "Distance moyenne\n(en km)", guide = "legend",
-                      na.value = "grey40") +
+                      na.value = "grey70") +
   labs(title = "Distance moyenne parcourue par les habitant·es de l'aire angevine",
        subtitle = "En fonction de leur lieu de résidence",
        caption = src_fig(filter(PER, uid_ENQ == "AGR2012")))
@@ -2985,7 +2992,7 @@ g = cartoHydro(g, et) +
   geom_sf(data = aav, aes(linetype = "Limites de l'AAV\nd'Angers (2020)"),
           color = "slateblue", size = .6, fill = NA, key_glyph = "polygon") +
   scale_linetype(name = "Agglomération")
-g = cartoAxes(g, et)
+g = cartoAxes(g, et, det = F)
 g = cartoLib(g, et)
 g = cartoFinish(g, et)
 
@@ -3007,7 +3014,7 @@ g = shp_ZT %>% left_join(disZT, by="ZT") %>%
   geom_sf(aes(fill = disMoy), color = "gray90", size=.2) +
   scale_fill_brewer(palette="BuPu",
                       name = "Distance moyenne\n(en km)", guide = "legend",
-                      na.value = "grey40") +
+                      na.value = "grey70") +
   labs(title = "Distance moyenne parcourue par les habitant·es de l'aire de Metz",
        subtitle = "En fonction de leur lieu de résidence",
        caption = src_fig(filter(PER, uid_ENQ == "MET2017")))
@@ -3015,7 +3022,7 @@ g = cartoHydro(g, et) +
   geom_sf(data = aav, aes(linetype = "Limites de l'AAV\nde Metz (2020)"),
           color = "slateblue", size = .6, fill = NA, key_glyph = "polygon") +
   scale_linetype(name = "Agglomération")
-g = cartoAxes(g, et)
+g = cartoAxes(g, et, det = F)
 g = cartoLib(g, et)
 g = cartoFinish(g, et)
 
@@ -3039,7 +3046,7 @@ g = shp_ZT %>% left_join(disZT, by="ZT") %>%
   geom_sf(aes(fill = disMoy), color = "gray90", size=.2) +
   scale_fill_brewer(palette="BuPu",
                       name = "Distance moyenne\n(en km)", guide = "legend",
-                      na.value = "grey90") +
+                      na.value = "grey70") +
   labs(title = "Distance moyenne parcourue par les habitant·es\nde la Réunion",
        subtitle = "En fonction de leur lieu de résidence",
        caption = src_fig(filter(PER, uid_ENQ == "REU2016")))
@@ -3073,7 +3080,7 @@ g = shp_ZT %>% left_join(disZT, by=c("ZT" = "ZT_travMax")) %>%
           color = "brown", linewidth = 1, fill = NA, key_glyph = "polygon") +
   scale_fill_brewer(palette="GnBu",
                       name = "Distance moyenne\n(en km)", guide = "legend",
-                      na.value = "grey40") +
+                      na.value = "grey70") +
   scale_linetype(name = "Agglomération") +
   labs(title = "Distance moyenne parcourue par les habitant·es\nde l'aire de Clermont-Ferrand",
        subtitle = "En fonction de leur lieu de travail principal (de la journée)",
@@ -3773,17 +3780,17 @@ PER_ld |> group_by(PCS42S, Genre) |>
 tDep = PER_f |>
   filter(modes_avion == "non") |>
   mutate(long = Dis > 166000) |>
-  comEnDep() |>
+  mutate(dep = comEnDep(Com)) |>
   group_by(dep, long) |> summarise(nb = sum(CoeffRecEnq, na.rm = T), n = n()) |>
-  group_by(dep) |> mutate(p = nb / sum(nb) * 100) |>
-  filter(long)
+  group_by(dep) |> mutate(p = nb / sum(nb) * 100, n = sum(n)) |>
+  filter(long) |> filter(n>seuilSignifiant)
 
 # Ça ne fonctionne pas en mutate :(
 tDep$pDisc = discretisation(tDep$p)
 nNiv = levels(tDep$pDisc) |> length()
 
 # Échelle
-echelle = scale_fill_manual(values = c(RColorBrewer::brewer.pal(nNiv, "BuPu"), "grey"),
+echelle = scale_fill_brewer(palette = "BuPu", na.value = "ghostwhite",
                             name = ml("Part de",
                                       "travailleur⋅ses",
                                       "parcourant plus",

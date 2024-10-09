@@ -7,7 +7,6 @@ source("START.R")
 initMémoire(BasesCharger = c("MEN", "PER"))
 dir.create("Sorties/Télétravail")
 
-PER = densitesZversPER(PER)
 
 # Absence de déplacement ====
 
@@ -316,6 +315,7 @@ off()
 
 # Par dép
 
+# Constitution d'une table départementale
 tabDep = PER |>
   mutate(dep = case_when(substr(Com, 1, 2) == "97" ~ substr(Com, 1, 3),
                          substr(Com, 1, 2) != "97" ~ substr(Com, 1, 2))) |>
@@ -331,15 +331,42 @@ tabDep = PER |>
   group_by(dep) |> mutate(p = n / sum(n) * 100) |>
   filter(VeilleTrav == "VeilleTrav3")
 
-deps = read_sf("Sources/Mailles/contour-des-departements.geojson")
-deps = left_join(deps, tabDep, by = c("code" = "dep"))
 
+# Constitution du fond de carte depuis la table des communes
+# c'est très long... ce n'est pas satisfaisant...
+if (file.exists("Data/deps.rds"))
+{
+  load("Data/deps.rds")
+} else {
+  coms = read_sf("Sources/Mailles/communes-20210101.shp")
+  coms$dep = substr(coms$insee, 1, 2)
+  coms$dep = ifelse(coms$dep == "97", substr(coms$insee, 1, 3), coms$dep)
+  
+  deps = coms |> st_simplify(preserveTopology = T, dTolerance = 100) |>
+    st_buffer(dist = 100) |>
+    group_by(dep) |> summarise() |> st_transform(crs = 3857)
+  
+  save(deps, file = "Data/deps.rds")
+  
+  remove(coms)
+}
+
+# jointure table attributaire / fond de carte
+deps = left_join(deps, tabDep, by = c("dep"))
+
+# points
 deps_pt = st_point_on_surface(deps)
 
-g = deps |>
+# discrétisation
+deps = deps |>
   mutate(pEtq = discretisation(p, nbClassesCible = 6, couper1pc = F)) |>
-  mutate(pEtq = as.factor(ifelse(p > 2.5, "[2.5:3[", as.character(pEtq)))) |>
+  mutate(pEtq = as.factor(ifelse(p > 2.5, "[2.5:3[", as.character(pEtq))))
+
+gB = read_sf("Sources/Fond Carte/geoBoundariesCGAZ_ADM0.shp")
+
+g = deps |>
   ggplot() +
+  geom_sf(data = gB, fill = "seashell", colour = "transparent") +
   geom_sf(aes(fill = pEtq)) +
   geom_sf(data = deps_pt, aes(size = n), shape = 21, colour = "orange") +
   scale_fill_manual(values = c(RColorBrewer::brewer.pal(5, "Blues"), "grey"),
@@ -347,12 +374,81 @@ g = deps |>
   scale_size(name = "Nombre total\nd'enquêté⋅es") +
   theme(axis.text = element_blank(),
         axis.ticks = element_blank(),
-        panel.grid = element_blank()) +
-  labs(title = "Part de journées en télétravail par département",
-       caption = src_fig(tibble(uid_ENQ = enqVeilleTrav)))
+        panel.grid = element_blank())
+
+# Zoom sur l'hexagone pour la carte principale
+g = g + coord_sf(xlim = c(-550000,1100000), ylim = c(5000000,6600000))
+
+# Calcul de la bbox de la Guyane
+bbox973 = st_bbox(filter(deps, dep == "973"))
+
+# Centroïde Martinique/Réunion
+ctr972 = st_centroid(filter(deps, dep == "972")) |> st_bbox()
+ctr974 = st_centroid(filter(deps, dep == "974")) |> st_bbox()
+
+# Calcul d'une bbox équivalente à celle de la Guyane autour de leurs centroïdes
+xinterv = as.double(bbox973$xmax - bbox973$xmin)
+yinterv = as.double(bbox973$ymax - bbox973$ymin)
+
+pts972 = data.frame(
+  lon = c(ctr972$xmax - (xinterv / 2), ctr972$xmax + (xinterv / 2),
+          ctr972$xmax + (xinterv / 2), ctr972$xmax - (xinterv / 2)) |> as.double(),
+  lat = c(ctr972$ymax + (yinterv / 2), ctr972$ymax + (yinterv / 2),
+          ctr972$ymax - (yinterv / 2), ctr972$ymax - (yinterv / 2)) |> as.double()
+)
+bbox972 = st_as_sf(pts972, coords = c("lon", "lat"), crs = st_crs(bbox973)) |>
+  summarise(geometry = st_combine(geometry)) |> st_cast("POLYGON") 
+box972 = st_bbox(bbox972)
+
+pts974 = data.frame(
+  lon = c(ctr974$xmax - (xinterv / 2), ctr974$xmax + (xinterv / 2),
+          ctr974$xmax + (xinterv / 2), ctr974$xmax - (xinterv / 2)) |> as.double(),
+  lat = c(ctr974$ymax + (yinterv / 2), ctr974$ymax + (yinterv / 2),
+          ctr974$ymax - (yinterv / 2), ctr974$ymax - (yinterv / 2)) |> as.double()
+)
+bbox974 = st_as_sf(pts974, coords = c("lon", "lat"), crs = st_crs(bbox973)) |>
+  summarise(geometry = st_combine(geometry)) |> st_cast("POLYGON")
+box974 = st_bbox(bbox974)
+
+# Création de cadres appropriés
+g972 = g + coord_sf(xlim = c(box972$xmin, box972$xmax), ylim = c(box972$ymin, box972$ymax))
+g973 = g + coord_sf(xlim = c(bbox973$xmin,bbox973$xmax), ylim = c(bbox973$ymin,bbox973$ymax))
+g974 = g + coord_sf(xlim = c(box974$xmin, box974$xmax), ylim = c(box974$ymin, box974$ymax))
+
+# On enlève les graduations
+g972 = g972 + theme(axis.text = element_blank(),
+      axis.ticks = element_blank(),
+      panel.grid = element_blank())
+g973 = g973 + theme(axis.text = element_blank(),
+                    axis.ticks = element_blank(),
+                    panel.grid = element_blank())
+g974 = g974 + theme(axis.text = element_blank(),
+                    axis.ticks = element_blank(),
+                    panel.grid = element_blank())
+
+# Encart des outremers
+gOM = cowplot::plot_grid(g972 + labs(subtitle = "Martinique") +
+                           theme(line = element_blank(),
+                                 legend.position = "none", plot.subtitle = element_text(hjust=.5)),
+                         g973 + labs(subtitle = "Guyane") +
+                           theme(line = element_blank(), 
+                                 legend.position = "none", plot.subtitle = element_text(hjust=.5)),
+                         g974 + labs(subtitle = "Réunion") +
+                           theme(line = element_blank(),
+                                 legend.position = "none", plot.subtitle = element_text(hjust=.5)),
+                         nrow = 3, rel_heights=c(1,1,1))
+
+# Ajout d'une échelle au cadre hexagone
+g = g + ggspatial::annotation_scale(location="bl", bar_cols = c("gray60", "gray95"),
+                                    line_col = "gray70", height = unit(.1, "cm"))
+
+# Réunion
+gg = cowplot::plot_grid(gOM, g, nrow = 1, rel_widths = c(1,5)) |>
+  viz_Titre("Part de journées en télétravail par département") |>
+  viz_Pied(src_fig(tibble(uid_ENQ = enqVeilleTrav), carto = T, gB = T))
 
 sortie("Télétravail/Carte déps")
-print(g)
+print(gg)
 off()
 
 # Children ?

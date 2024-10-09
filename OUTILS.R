@@ -115,7 +115,7 @@ moisEnCours = function()
 
 
 # Fonction pour sourcer les documents
-src_fig = function(base = NULL, bu = T, emp = T, carto = F, date = moisEnCours(),
+src_fig = function(base = NULL, bu = T, emp = T, carto = F, gB = F, date = moisEnCours(),
                    auteurs = "Maxime Guinepain")
 {
     
@@ -198,7 +198,11 @@ src_fig = function(base = NULL, bu = T, emp = T, carto = F, date = moisEnCours()
     
     if (carto)
     {
-        lib = paste0(lib, "Cartographie : IGN Route500, geonames.org, Mobiliscope.\n")
+        lib = paste0(lib, "Cartographie : IGN Route500, geonames.org, Mobiliscope")
+        
+        if (gB) { lib = paste0(lib, ", geoboundaries.org") }
+        
+        lib = paste0(lib, ".\n")
     }
     
     if (!is.null(auteurs) & !is.null(date)) {
@@ -2081,7 +2085,9 @@ paliers = function(x, palier, floor = F)
   return(x)
 }
 
-discretisation = function(x, methode = "net", verb = F, couper1pc = F, nbClassesCible = 8, passerLog = F)
+discretisation = function(x, methode = "net", verb = F, couper1pc = F,
+                          nbClassesCible = 8, passerLog = F,
+                          palier = NULL)
 {
   if (couper1pc)
   {
@@ -2116,8 +2122,19 @@ discretisation = function(x, methode = "net", verb = F, couper1pc = F, nbClasses
       if (i + 1 > length(seuilsPaliers)) { break }
     }
     
-    intervalles = unique(paliers(na.omit(x), seuilsPaliers[i], floor = T))
+    intervalles = sort(unique(paliers(na.omit(x), seuilsPaliers[i], floor = T)))
     intervalles = c(intervalles, intervalles[length(intervalles)] + seuilsPaliers[i])
+  }
+  
+  if (methode == "palier")
+  {
+    if (!is.null(palier))
+    {
+      intervalles = sort(unique(paliers(na.omit(x), palier, floor = T)))
+      intervalles = c(intervalles, intervalles[length(intervalles)] + palier)
+    } else {
+      stop("Fournir un palier !")
+    }
   }
   
   y = x

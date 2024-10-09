@@ -1526,6 +1526,12 @@ PER %>% filter(DuTvl > 0,  Activ == "11", JoTvDeb > 0, JoTvFin < 27) %>%
 
 # Cartographie des horaires par enquête ====
 
+source("START.R")
+initMémoire()
+
+load("Data/PER.rds")
+PER_ff = init_PER_ff(PER)
+
 # carte lissée ?
 
 load("Data/shp_ZF.rds")
@@ -1618,6 +1624,10 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
 {
   brksPop = c(1000, 2000, 5000)
   
+  gB = read_sf("Sources/Fond Carte/geoBoundariesCGAZ_ADM0.shp") |>
+    filter(shapeName == "France") |> st_transform(2154)
+  bbox =  shp_ZT %>% filter(uid_ENQ == enq) |> st_bbox()
+  
   PERf = filter(PER_ff, uid_ENQ == enq, JoTvDeb > 4)
   
   PERf3 = filter(PERf, PCS8 == "03") %>%
@@ -1629,6 +1639,7 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
     left_join(PERf3, by=c("ZT" = "ZT_travMax")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "darkorchid", high = "darkorange", na.value = "gray65",
@@ -1636,7 +1647,8 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "population en\nemploi sur\nle secteur",
                breaks = brksPop) +
-    labs(title = "Cadres")
+    labs(title = "Cadres") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c3 = cartoLib(c3, etendue = filter(shp_ZT, uid_ENQ == enq), detail = detLab, carte = fdCarte)
   c3 = cartoFinish(c3, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1649,6 +1661,7 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
     left_join(PERf4, by=c("ZT" = "ZT_travMax")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "darkorchid", high = "darkorange", na.value = "gray65",
@@ -1656,7 +1669,8 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "population en\nemploi sur\nle secteur",
                breaks = brksPop) +
-    labs(title = "Professions intermédiaires")
+    labs(title = "Professions intermédiaires") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c4 = cartoLib(c4, etendue = filter(shp_ZT, uid_ENQ == enq), detail = detLab, carte = fdCarte)
   c4 = cartoFinish(c4, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1668,6 +1682,7 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
   c5 = shp_ZT %>% filter(uid_ENQ == enq) %>% left_join(PERf5, by=c("ZT" = "ZT_travMax")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "darkorchid", high = "darkorange", na.value = "gray65",
@@ -1675,7 +1690,8 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "population en\nemploi sur\nle secteur",
                breaks = brksPop) +
-    labs(title = "Employé·es")
+    labs(title = "Employé·es") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c5 = cartoLib(c5, etendue = filter(shp_ZT, uid_ENQ == enq), detail = detLab, carte = fdCarte)
   c5 = cartoFinish(c5, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1688,6 +1704,7 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
     left_join(PERf6, by=c("ZT" = "ZT_travMax")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "darkorchid", high = "darkorange", na.value = "gray65",
@@ -1695,7 +1712,8 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "population en\nemploi sur\nle secteur",
                breaks = brksPop) +
-    labs(title = "Ouvrier·es")
+    labs(title = "Ouvrier·es") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c6 = cartoLib(c6, etendue = filter(shp_ZT, uid_ENQ == enq), detail = detLab, carte = fdCarte)
   c6 = cartoFinish(c6, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1710,7 +1728,7 @@ quadriPCS = function(enq, proj=2154, titre=NULL,
   {
     p = viz_Titre(p, titre)
   }
-  p = viz_Pied(p, pied = src_fig(PERf), rel_heights = c(.95, .05))
+  p = viz_Pied(p, pied = src_fig(PERf, carto = T, gB = T), rel_heights = c(.95, .05))
   
   return(p)
 }
@@ -1734,7 +1752,7 @@ off()
 
 sortie("Horaires/Horaires (quadri, 13)", taille = "carré")
 quadriPCS("MAR2009", titre = "Heure moyenne d'arrivée au lieu de travail\nen région marseillaise selon la PCS",
-          brks = seq(from = 6.5, to = 10, by = .5), detLab = 2)
+          brks = seq(from = 6.5, to = 10, by = .5), detLab = 1)
 off()
 
 sortie("Horaires/Horaires (quadri, bordeaux)")
@@ -1839,6 +1857,10 @@ quadriPotPCS_joDeb = function(enq, proj=2154, titre=NULL, brks=c(7, 7.25, 7.5, 7
 quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
                            brks = c(7, 7.25, 7.5, 7.75, 8, 8.25, 8.5, 8.75, 9))
 {
+  gB = read_sf("Sources/Fond Carte/geoBoundariesCGAZ_ADM0.shp") |>
+    filter(shapeName == "France") |> st_transform(2154)
+  bbox =  shp_ZT %>% filter(uid_ENQ == enq) |> st_bbox()
+  
   PERf = PER_ff %>%
     filter(uid_ENQ == enq) %>%
     mutate(JoDeb = heureHHMMtoM(JoDeb)/60) %>%
@@ -1853,6 +1875,7 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
   c3 = shp_ZT %>% filter(uid_ENQ == enq) %>% left_join(PERf3, by=c("ZT")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "slateblue", high = "lightgoldenrod", na.value = "gray65",
@@ -1860,7 +1883,8 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "nombre de\ntravailleur⋅ses\nrésidant⋅es",
                breaks = brksPop, limits = c(0,5000)) +
-    labs(title = "Cadres")
+    labs(title = "Cadres") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c3 = cartoLib(c3, etendue = filter(shp_ZT, uid_ENQ == enq), detail = 3, carte = fdCarte)
   c3 = cartoFinish(c3, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1872,6 +1896,7 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
   c4 = shp_ZT %>% filter(uid_ENQ == enq) %>% left_join(PERf4, by=c("ZT")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "slateblue", high = "lightgoldenrod", na.value = "gray65",
@@ -1879,7 +1904,8 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "nombre de\ntravailleur⋅ses\nrésidant⋅es",
                breaks = brksPop, limits = c(0,5000)) +
-    labs(title = "Professions intermédiaires")
+    labs(title = "Professions intermédiaires") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c4 = cartoLib(c4, etendue = filter(shp_ZT, uid_ENQ == enq), detail = 3, carte = fdCarte)
   c4 = cartoFinish(c4, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1891,6 +1917,7 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
   c5 = shp_ZT %>% filter(uid_ENQ == enq) %>% left_join(PERf5, by=c("ZT")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "slateblue", high = "lightgoldenrod", na.value = "gray65",
@@ -1898,7 +1925,8 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "nombre de\ntravailleur⋅ses\nrésidant⋅es",
                breaks = brksPop, limits = c(0,5000)) +
-    labs(title = "Employé·es")
+    labs(title = "Employé·es") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c5 = cartoLib(c5, etendue = filter(shp_ZT, uid_ENQ == enq), detail = 3, carte = fdCarte)
   c5 = cartoFinish(c5, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1911,6 +1939,7 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
   c6 = shp_ZT %>% filter(uid_ENQ == enq) %>% left_join(PERf6, by=c("ZT")) %>%
     st_point_on_surface() %>%
     ggplot() +
+    geom_sf(data = gB, fill = "seashell", colour = "transparent") +
     geom_sf(data = filter(shp_ZT, uid_ENQ == enq), fill = "gray95", color = "gray85") +
     geom_sf(aes(color = JoTvDeb, size = p), alpha = .8) +
     scale_color_gradient(low = "slateblue", high = "lightgoldenrod", na.value = "gray65",
@@ -1918,7 +1947,8 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
                          breaks = brks, limits = brks[c(1, length(brks))]) +
     scale_size(name = "nombre de\ntravailleur⋅ses\nrésidant⋅es",
                breaks = brksPop, limits = c(0,5000)) +
-    labs(title = "Ouvrier·es")
+    labs(title = "Ouvrier·es") +
+    coord_sf(xlim = c(bbox$xmin, bbox$xmax), ylim = c(bbox$ymin, bbox$ymax))
   c6 = cartoLib(c6, etendue = filter(shp_ZT, uid_ENQ == enq), detail = 3, carte = fdCarte)
   c6 = cartoFinish(c6, etendue = filter(shp_ZT, uid_ENQ == enq))
   
@@ -1933,7 +1963,7 @@ quadriPCS_joDeb = function(enq, proj=2154, titre=NULL,
   {
     p = viz_Titre(p, titre)
   }
-  p = viz_Pied(p, pied = src_fig(PERf), rel_heights = c(.95, .05))
+  p = viz_Pied(p, pied = src_fig(PERf, carto = T, gB = T), rel_heights = c(.95, .05))
   
   return(p)
 }
