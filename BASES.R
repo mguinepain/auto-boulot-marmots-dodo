@@ -4638,7 +4638,7 @@ init_densiteCom = function(shp_COM)
     
     grille_om = select(grille_om, colnames(grille))
     
-    grille = rbind(grille, grille_om)
+    grille = rbind(st_transform(grille, crs=3857), grille_om)
     
     grille$surf = as.double(st_area(grille)/10^6)
   }
@@ -4903,7 +4903,8 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
     patch_shpCodeZt() %>% # corrige des problèmes de formatage des codes ZT
     mutate(ZT = paste0(uid_ENQ, CODE_SEC))
   
-  chk_Bases()
+  chk_Bases(supprimer = T)
+  # pb avec TRJ....
   
   rapport("Application des correctifs")
   # Patchs d'ensemble
@@ -4930,9 +4931,13 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
     patch_ZFenComUniques(tableZFdeComUniques) %>%
     patch_GeomFev2021(shp_ZF, PGT) 
   
-  chk_Bases()
-  
-  # On sauvegarde tout ce qu'on peut car ça casse derrière en local
+  chk_Bases(supprimer = T, sauver = T)
+  # if (file.exists("Data/TRJ.rds"))
+  # {
+  #   load("Data/TRJ.rds")
+  # }
+
+    # On sauvegarde tout ce qu'on peut car ça casse derrière en local
   save(MEN, file="Data/MEN.rds")
   save(PER, file="Data/PER.rds")
   save(DEP, file="Data/DEP.rds")
@@ -5005,9 +5010,6 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
   PER$uid_VEH = as.character(PER$uid_VEH)
   PER$uid_VEH.x = NULL ; PER$uid_VEH.y = NULL
   
-  # Nouveau carroyage
-  PER = densitesZversPER(PER)
-  
   save(VEH, file = "Data/VEH.rds") ; remove(VEH)
   save(PER, file = "Data/PER.rds")
   
@@ -5033,13 +5035,6 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
   filtres = left_join(filtres, filtreRec, by=c("uid_ENQ" = "uid_ENQ"))
   save(filtres,file="Data/filtres.rds")
   remove(filtres, filtreRec)
-  
-  rm(list = ls()[!ls() %in% garder], pos = globalenv())
-  initMémoire(f_base = T, BasesCharger = c("PER", "DEP", "ACT"))
-  rapport("Calcul de la table d'activités")
-  activites = load_activites(PER, DEP, ACT, pasDeTemps = pasDeTemps)
-  save(activites, file="activites.rds")
-  remove(activites)
   
   load("Data/shp_ZTS.rds")
   # [Octobre 2022] prendre en compte nAct plutôt que N semble intéressant
@@ -5130,6 +5125,21 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
     mutate(Dis_pBclTvl = Dis_bclTvl/Dis * 100)
   save(PER, file="Data/PER.rds")
   
+  # Coefficients
+  rm(list = ls()[!ls() %in% garder], pos = globalenv())
+  initMémoire(f_base = T, BasesCharger = c("MEN", "PER", "shp_ZT", "shp_COM"))
+  PER = calcul_coeffs_nationaux_PER(MEN, PER, shp_ZT, shp_COM)
+  save(PER, file = "Data/PER.rds")
+  
+  # Calcul table d'activités hph
+  rm(list = ls()[!ls() %in% garder], pos = globalenv())
+  initMémoire(f_base = T, BasesCharger = c("PER", "DEP", "ACT"))
+  rapport("Calcul de la table d'activités")
+  # activites = load_activites(PER, DEP, ACT, pasDeTemps = pasDeTemps)
+  activites = load_activites_memoryProof(PER, DEP, ACT, pasDeTemps = pasDeTemps)
+  save(activites, file="Data/activites.rds")
+  remove(activites)
+  
   # Fond de carte
   initMémoire(f_base = T)
   rapport("Chargement des données de fond de carte")
@@ -5138,8 +5148,8 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
   
   
   # Préparation de variables d'analyse dans PER
-  initMémoire(BasesCharger = "PER")
-  rapport("Préparation des variables")
+  initMémoire(f_base = T, BasesCharger = "PER")
+  rapport("Préparation des variables complémentaires")
   if (class(PER$ZoneDens)[1] == "character") { PER$ZoneDens = factor(PER$ZoneDens,
                                                                      levels=c("1","2","3","4")) }
   if (class(PER$ZoneRang)[1] == "character") { PER$ZoneRang = factor(PER$ZoneRang,
@@ -5179,6 +5189,10 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
                                                           "Local Densité interm.",
                                                           "Local Densité faible")))
   
+  
+  # Nouveau carroyage
+  PER = densitesZversPER(PER)
+  
   # Certains codes ZF n'ont plus d'uid_ENQ... J'ignore pourquoi (mai 2023)
   # Pansement sur jambe de bois
   PER = patch_codeZF(PER)
@@ -5208,17 +5222,7 @@ initBases = function(incrémenter = T, pasDeTemps = pas)
   }
   save(shp_ZT, file="Data/shp_ZT.rds")
   
-  source("START.R") ; gc(full = T)
-  initMémoire(BasesCharger = c("PER", "MEN", "shp_COM", "shp_ZT", "shp_ZTS"))
-  
-  
-  
-  # remove(tabPopPER, tabPop)
-  
-  save(PER, file = "Data/PER.rds")
-  
-  
-  # Effacement des figures
+    # Effacement des figures
   rapport("Effacement des figures")
   listeFigures = c(paste0("Sorties/Figures/", dir("Sorties/Figures", include.dirs = F)),
                    paste0("Sorties/Figures/Cartes/", dir("Sorties/Figures/Cartes", include.dirs = F)),
